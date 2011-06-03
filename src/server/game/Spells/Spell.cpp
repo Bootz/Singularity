@@ -4485,13 +4485,13 @@ void Spell::TakeReagents()
     if (p_caster->CanNoReagentCast(m_spellInfo))
         return;
 
-    for (uint32 x = 0; x < MAX_SPELL_REAGENTS; ++x)
+    for (uint8 x = 0; x < MAX_SPELL_REAGENTS; ++x)
     {
-        if (m_spellInfo->GetSpellReagents()->Reagent[x] <= 0)
+        if (m_spellInfo->GetReagent(x) <= 0)
             continue;
 
-        uint32 itemid = m_spellInfo->GetSpellReagents()->Reagent[x];
-        uint32 itemcount = m_spellInfo->GetSpellReagents()->ReagentCount[x];
+        uint32 itemid = m_spellInfo->GetReagent(x);
+        uint32 itemcount = m_spellInfo->GetReagentCount(x);
 
         // if CastItem is also spell reagent
         if (m_CastItem)
@@ -5908,13 +5908,13 @@ SpellCastResult Spell::CheckItems()
         // check reagents (ignore triggered spells with reagents processed by original spell) and special reagent ignore case.
         if (checkReagents)
         {
-            for (uint32 i = 0; i < MAX_SPELL_REAGENTS; i++)
+            for (uint8 i = 0; i < MAX_SPELL_REAGENTS; i++)
             {
-                if (m_spellInfo->GetSpellReagents()->Reagent[i] <= 0)
+                if (m_spellInfo->GetReagent(i) <= 0)
                     continue;
 
-                uint32 itemid    = m_spellInfo->GetSpellReagents()->Reagent[i];
-                uint32 itemcount = m_spellInfo->GetSpellReagents()->ReagentCount[i];
+                uint32 itemid    = m_spellInfo->GetReagent(i);
+                uint32 itemcount = m_spellInfo->GetReagentCount(i);
 
                 // if CastItem is also spell reagent
                 if (m_CastItem && m_CastItem->GetEntry() == itemid)

@@ -182,6 +182,7 @@ DBCStorage <SpellTargetRestrictionsEntry> sSpellTargetRestrictionsStore(SpellTar
 DBCStorage <SpellTotemsEntry> sSpellTotemsStore(SpellTotemsEntryfmt);
 
 SpellEffectMap sSpellEffectMap;
+SpellReagentMap sSpellReagentMap;
 
 DBCStorage <SpellCastTimesEntry> sSpellCastTimesStore(SpellCastTimefmt);
 DBCStorage <SpellDifficultyEntry> sSpellDifficultyStore(SpellDifficultyfmt);
@@ -717,6 +718,15 @@ SpellEffectEntry const* GetSpellEffectEntry(uint32 spellId, uint32 effect)
         return NULL;
 
     return itr->second.effects[effect];
+}
+
+SpellReagentsEntry const* GetSpellReagentEntry(uint32 spellId, uint8 reagent)
+{
+    SpellReagentMap::const_iterator itr = sSpellReagentMap.find(spellId);
+    if(itr == sSpellReagentMap.end())
+        return NULL;
+
+    return itr->second.reagents[reagent];
 }
 
 uint32 GetTalentSpellCost(uint32 spellId)

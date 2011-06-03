@@ -2407,14 +2407,14 @@ bool SpellMgr::IsSpellValid(SpellEntry const *spellInfo, Player *pl, bool msg)
     {
         for (uint8 j = 0; j < MAX_SPELL_REAGENTS; ++j)
         {
-            if (spellInfo->GetSpellReagents()->Reagent[j] > 0 && !sObjectMgr->GetItemTemplate(spellInfo->GetSpellReagents()->Reagent[j]))
+            if (spellInfo->GetReagent(j) > 0 && !sObjectMgr->GetItemTemplate(spellInfo->GetReagent(j)))
             {
                 if (msg)
                 {
                     if (pl)
-                        ChatHandler(pl).PSendSysMessage("Craft spell %u have not-exist reagent in DB item (Entry: %u) and then...", spellInfo->Id, spellInfo->GetSpellReagents()->Reagent[j]);
+                        ChatHandler(pl).PSendSysMessage("Craft spell %u have not-exist reagent in DB item (Entry: %u) and then...", spellInfo->Id, spellInfo->GetReagent(j));
                     else
-                        sLog->outErrorDb("Craft spell %u have not-exist reagent in DB item (Entry: %u) and then...", spellInfo->Id, spellInfo->GetSpellReagents()->Reagent[j]);
+                        sLog->outErrorDb("Craft spell %u have not-exist reagent in DB item (Entry: %u) and then...", spellInfo->Id, spellInfo->GetReagent(j));
                 }
                 return false;
             }

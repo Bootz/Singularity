@@ -174,9 +174,9 @@ SpellPowerEntry const* SpellEntry::GetSpellPower() const
     return SpellPowerId ? sSpellPowerStore.LookupEntry(SpellPowerId) : NULL;
 }
 
-SpellReagentsEntry const* SpellEntry::GetSpellReagents() const
+SpellReagentsEntry const* SpellEntry::GetSpellReagents(uint8 eff) const
 {
-    return SpellReagentsId ? sSpellReagentsStore.LookupEntry(SpellReagentsId) : NULL;
+    return GetSpellReagentEntry(Id, eff);
 }
 
 SpellScalingEntry const* SpellEntry::GetSpellScaling() const
@@ -498,4 +498,18 @@ uint32 SpellEntry::GetStancesNot() const
 {
     SpellShapeshiftEntry const* ss = GetSpellShapeshift();
     return ss ? ss->StancesNot : 0;
+}
+//SpellReagentsEntry
+uint32 SpellEntry::GetReagent(uint8 reagents) const
+{
+    if (SpellReagentsEntry const* reagent = GetSpellReagents(reagents))
+        return reagent->Reagent[reagents];
+    return 0;
+}
+
+uint32 SpellEntry::GetReagentCount(uint8 reagents) const
+{
+    if (SpellReagentsEntry const* reagent = GetSpellReagents(reagents))
+        return reagent->ReagentCount[reagents];
+    return 0;
 }

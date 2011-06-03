@@ -1726,6 +1726,23 @@ struct SpellReagentsEntry
     uint32    ReagentCount[MAX_SPELL_REAGENTS];             // 62-69    m_reagentCount
 };
 
+struct SpellReagent
+{
+    SpellReagent()
+    {
+        reagents[0] = NULL;
+        reagents[1] = NULL;
+        reagents[2] = NULL;
+        reagents[3] = NULL;
+        reagents[4] = NULL;
+        reagents[5] = NULL;
+        reagents[6] = NULL;
+        reagents[7] = NULL;
+    }
+    SpellReagentsEntry const* reagents[MAX_SPELL_REAGENTS];
+};
+typedef std::map<uint32, SpellReagent> SpellReagentMap;
+
 // SpellScaling.dbc
 struct SpellScalingEntry
 {
@@ -1848,7 +1865,7 @@ struct SpellEntry
     SpellInterruptsEntry const* GetSpellInterrupts() const;
     SpellLevelsEntry const* GetSpellLevels() const;
     SpellPowerEntry const* GetSpellPower() const;
-    SpellReagentsEntry const* GetSpellReagents() const;
+    SpellReagentsEntry const* GetSpellReagents(uint8 reagent) const;
     SpellScalingEntry const* GetSpellScaling() const;
     SpellShapeshiftEntry const* GetSpellShapeshift() const;
     SpellTargetRestrictionsEntry const* GetSpellTargetRestrictions() const;
@@ -1906,6 +1923,9 @@ struct SpellEntry
     uint32 GetExcludeTargetAuraSpell() const;
     uint32 GetExcludeCasterAuraSpell() const;
     uint32 GetTargetAuraStateNot() const;
+    //SpellReagentsEntry
+    uint32 GetReagent(uint8 reagent) const;
+    uint32 GetReagentCount(uint8 reagent) const; 
 
     private:
         // prevent creating custom entries (copy data from original in fact)
