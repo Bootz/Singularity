@@ -56,7 +56,7 @@ RealmID = 1
 #    DataDir
 #        Description: Data directory setting.
 #        Important:   DataDir needs to be quoted, as the string might contain space characters.
-#        Example:     "@prefix@/share/trinitycore"
+#        Example:     "@prefix@/share/singularitycore"
 #        Default:     "."
 
 DataDir = "."
@@ -1072,9 +1072,9 @@ StartPlayerMoney = 0
 #
 #    MaxHonorPoints
 #        Description: Maximum honor points a character can have.
-#        Default:     75000
+#        Default:     4000
 
-MaxHonorPoints = 75000
+MaxHonorPoints = 4000
 
 #
 #    StartHonorPoints
@@ -1084,18 +1084,18 @@ MaxHonorPoints = 75000
 StartHonorPoints = 0
 
 #
-#    MaxArenaPoints
-#        Description: Maximum arena points a character can have.
-#        Default:     10000
+#    MaxJusticePoints
+#        Description: Maximum justice points a character can have.
+#        Default:     4000
 
-MaxArenaPoints = 10000
+MaxJusticePoints = 4000
 
 #
-#    StartArenaPoints
-#        Description: Amount of arena points that characters has after creation.
+#    StartJusticePoints
+#        Description: Amount of justice points that characters has after creation.
 #        Default:     0
 
-StartArenaPoints = 0
+StartJusticePoints = 0
 
 #
 #    RecruitAFriend.MaxLevel
@@ -1352,10 +1352,10 @@ BeepAtStart = 1
 #    Motd
 #        Description: Message of the Day, displayed at login.
 #                     Use '@' for a newline and be sure to escape special characters.
-#        Example:     "Welcome to John\'s Server@This server runs on Trinity Core."
-#        Default:     "Welcome to a Trinity Core server."
+#        Example:     "Welcome to John\'s Server@This server runs on Singularity Core."
+#        Default:     "Welcome to a Singularity Core server."
 
-Motd = "Welcome to a Trinity Core server."
+Motd = "Welcome to a Singularity Core server."
 
 #
 #    Server.LoginInfo

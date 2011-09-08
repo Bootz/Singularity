@@ -2286,11 +2286,11 @@ void Guild::_CreateDefaultGuildRanks(LocaleConstant loc)
     stmt->setUInt32(0, m_id);
     CharacterDatabase.Execute(stmt);
 
-    _CreateRank(sObjectMgr->GetTrinityString(LANG_GUILD_MASTER,   loc), GR_RIGHT_ALL);
-    _CreateRank(sObjectMgr->GetTrinityString(LANG_GUILD_OFFICER,  loc), GR_RIGHT_ALL);
-    _CreateRank(sObjectMgr->GetTrinityString(LANG_GUILD_VETERAN,  loc), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
-    _CreateRank(sObjectMgr->GetTrinityString(LANG_GUILD_MEMBER,   loc), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
-    _CreateRank(sObjectMgr->GetTrinityString(LANG_GUILD_INITIATE, loc), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
+    _CreateRank(sObjectMgr->GetSingularityString(LANG_GUILD_MASTER,   loc), GR_RIGHT_ALL);
+    _CreateRank(sObjectMgr->GetSingularityString(LANG_GUILD_OFFICER,  loc), GR_RIGHT_ALL);
+    _CreateRank(sObjectMgr->GetSingularityString(LANG_GUILD_VETERAN,  loc), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
+    _CreateRank(sObjectMgr->GetSingularityString(LANG_GUILD_MEMBER,   loc), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
+    _CreateRank(sObjectMgr->GetSingularityString(LANG_GUILD_INITIATE, loc), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
 }
 
 void Guild::_CreateRank(const std::string& name, uint32 rights)

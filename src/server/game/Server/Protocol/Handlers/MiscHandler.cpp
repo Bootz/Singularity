@@ -539,7 +539,7 @@ void WorldSession::HandleAddFriendOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_ADD_FRIEND");
 
-    std::string friendName = GetTrinityString(LANG_FRIEND_IGNORE_UNKNOWN);
+    std::string friendName = GetSingularityString(LANG_FRIEND_IGNORE_UNKNOWN);
     std::string friendNote;
 
     recv_data >> friendName;
@@ -631,7 +631,7 @@ void WorldSession::HandleAddIgnoreOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_ADD_IGNORE");
 
-    std::string IgnoreName = GetTrinityString(LANG_FRIEND_IGNORE_UNKNOWN);
+    std::string IgnoreName = GetSingularityString(LANG_FRIEND_IGNORE_UNKNOWN);
 
     recv_data >> IgnoreName;
 
@@ -1199,7 +1199,7 @@ void WorldSession::HandleInspectHonorStatsOpcode(WorldPacket& recv_data)
 
     WorldPacket data(SMSG_INSPECT_HONOR_STATS, 8+1+4*4);
     data << uint64(player->GetGUID());
-    data << uint8(player->GetHonorPoints());
+    data << uint8(player->GetCurrency(CURRENCY_TYPE_HONOR_POINTS));
     data << uint32(player->GetUInt32Value(PLAYER_FIELD_KILLS));
     data << uint32(player->GetUInt32Value(0));
     data << uint32(player->GetUInt32Value(0));
@@ -1687,4 +1687,12 @@ void WorldSession::HandleInstanceLockResponse(WorldPacket& recvPacket)
         _player->RepopAtGraveyard();
 
     _player->SetPendingBind(NULL, 0);
+}
+
+void WorldSession::HandleViolenceLevelOpcode(WorldPacket & recv_data)
+{
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: CMSG_VIOLENCE_LEVEL");
+
+    std::string unk;
+    recv_data >> unk;
 }

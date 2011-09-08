@@ -63,6 +63,7 @@ public:
             { "sellerror",      SEC_ADMINISTRATOR,  false, &HandleDebugSendSellErrorCommand,      "", NULL },
             { "setphaseshift",  SEC_ADMINISTRATOR,  false, &HandleDebugSendSetPhaseShiftCommand,  "", NULL },
             { "spellfail",      SEC_ADMINISTRATOR,  false, &HandleDebugSendSpellFailCommand,      "", NULL },
+            { "raw",            SEC_ADMINISTRATOR,  false, &HandleDebugSendRawCommand,            "", NULL },
             { NULL,             0,                  false, NULL,                                  "", NULL }
         };
         static ChatCommand debugCommandTable[] =
@@ -402,6 +403,30 @@ public:
         player->GetSession()->SendPacket(&data);
         handler->PSendSysMessage(LANG_COMMAND_OPCODESENT, data.GetOpcode(), unit->GetName());
         return true;
+    }
+
+    static bool HandleDebugSendRawCommand(ChatHandler* handler, const char* args)
+    {
+        std::ifstream stream("data.txt");
+        Player* player = handler->GetSession()->GetPlayer();
+
+        if (stream.bad())
+            return false;
+
+        uint32 opcode;
+        stream >> std::hex >> opcode;
+
+        WorldPacket data(Opcodes(opcode), 100);
+
+        while (!stream.eof())
+        {
+            uint32 raw;
+            stream >> raw;
+            data.append(uint8(raw));
+        }
+
+        stream.close();
+        player->GetSession()->SendPacket(&data);
     }
 
     static bool HandleDebugUpdateWorldStateCommand(ChatHandler* handler, const char* args)

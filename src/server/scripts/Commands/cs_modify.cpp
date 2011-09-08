@@ -53,9 +53,8 @@ public:
             { "spell",          SEC_MODERATOR,      false, &HandleModifySpellCommand,         "", NULL },
             { "tp",             SEC_MODERATOR,      false, &HandleModifyTalentCommand,        "", NULL },
             { "mount",          SEC_MODERATOR,      false, &HandleModifyMountCommand,         "", NULL },
-            { "honor",          SEC_MODERATOR,      false, &HandleModifyHonorCommand,         "", NULL },
+            { "currency",       SEC_MODERATOR,      false, &HandleModifyCurrencyCommand,      "", NULL },
             { "rep",            SEC_GAMEMASTER,     false, &HandleModifyRepCommand,           "", NULL },
-            { "arena",          SEC_MODERATOR,      false, &HandleModifyArenaCommand,         "", NULL },
             { "drunk",          SEC_MODERATOR,      false, &HandleModifyDrunkCommand,         "", NULL },
             { "standstate",     SEC_GAMEMASTER,     false, &HandleModifyStandStateCommand,    "", NULL },
             { "morph",          SEC_GAMEMASTER,     false, &HandleModifyMorphCommand,         "", NULL },
@@ -192,7 +191,7 @@ public:
         target->SetMaxPower(POWER_ENERGY, energym);
         target->SetPower(POWER_ENERGY, energy);
 
-        sLog->outDetail(handler->GetTrinityString(LANG_CURRENT_ENERGY), target->GetMaxPower(POWER_ENERGY));
+        sLog->outDetail(handler->GetSingularityString(LANG_CURRENT_ENERGY), target->GetMaxPower(POWER_ENERGY));
 
         return true;
     }
@@ -274,8 +273,8 @@ public:
         if (handler->needReportToTarget(target))
             (ChatHandler(target)).PSendSysMessage(LANG_YOURS_RUNIC_POWER_CHANGED, handler->GetNameLink().c_str(), rune/10, runem/10);
 
-        target->SetMaxPower(POWER_RUNIC_POWER, runem);
-        target->SetPower(POWER_RUNIC_POWER, rune);
+        target->SetMaxPower(POWER_RUNIC, runem);
+        target->SetPower(POWER_RUNIC, rune);
 
         return true;
     }
@@ -960,14 +959,14 @@ public:
         target->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP);
         target->Mount(mId);
 
-        WorldPacket data(SMSG_FORCE_RUN_SPEED_CHANGE, (8+4+1+4));
+        WorldPacket data(UNKNOWN_OPCODE, (8+4+1+4));
         data.append(target->GetPackGUID());
         data << (uint32)0;
         data << (uint8)0;                                       //new 2.1.0
         data << float(speed);
         target->SendMessageToSet(&data, true);
 
-        data.Initialize(SMSG_FORCE_SWIM_SPEED_CHANGE, (8+4+4));
+        data.Initialize(UNKNOWN_OPCODE, (8+4+4));
         data.append(target->GetPackGUID());
         data << (uint32)0;
         data << float(speed);
@@ -1002,7 +1001,7 @@ public:
         {
             int32 newmoney = int32(moneyuser) + addmoney;
 
-            sLog->outDetail(handler->GetTrinityString(LANG_CURRENT_MONEY), moneyuser, addmoney, newmoney);
+            sLog->outDetail(handler->GetSingularityString(LANG_CURRENT_MONEY), moneyuser, addmoney, newmoney);
             if (newmoney <= 0)
             {
                 handler->PSendSysMessage(LANG_YOU_TAKE_ALL_MONEY, handler->GetNameLink(target).c_str());
@@ -1034,7 +1033,7 @@ public:
                 target->ModifyMoney(addmoney);
         }
 
-        sLog->outDetail(handler->GetTrinityString(LANG_NEW_MONEY), moneyuser, addmoney, target->GetMoney());
+        sLog->outDetail(handler->GetSingularityString(LANG_NEW_MONEY), moneyuser, addmoney, target->GetMoney());
 
         return true;
     }
@@ -1094,7 +1093,7 @@ public:
         return true;
     }
 
-    static bool HandleModifyHonorCommand (ChatHandler* handler, const char* args)
+    static bool HandleModifyCurrencyCommand (ChatHandler* handler, const char* args)
     {
         if (!*args)
             return false;
@@ -1102,8 +1101,8 @@ public:
         Player* target = handler->getSelectedPlayer();
         if (!target)
         {
-            handler->SendSysMessage(LANG_PLAYER_NOT_FOUND);
-            handler->SetSentErrorMessage(true);
+        	handler->SendSysMessage(LANG_PLAYER_NOT_FOUND);
+        	handler->SetSentErrorMessage(true);
             return false;
         }
 
@@ -1111,11 +1110,23 @@ public:
         if (handler->HasLowerSecurity(target, 0))
             return false;
 
-        int32 amount = (uint32)atoi(args);
+        char* currencyid_s = strtok((char*)args, " ");
+        char* amount_s = strtok(NULL, "");
+        if (!currencyid_s || !amount_s)
+            return false;
 
-        target->ModifyHonorPoints(amount);
+        int32 currencyid = (int32)atoi(currencyid_s);
+        int32 amount = (int32)atoi(amount_s);
+        if (!sCurrencyTypesStore.LookupEntry(uint32(currencyid)))
+        {
+        	handler->PSendSysMessage("Currency %u does not exist.", currencyid);
+        	handler->SetSentErrorMessage(true);
+            return false;
+        }
 
-        handler->PSendSysMessage(LANG_COMMAND_MODIFY_HONOR, handler->GetNameLink(target).c_str(), target->GetHonorPoints());
+        target->ModifyCurrency(uint32(currencyid), amount);
+
+        handler->PSendSysMessage(LANG_COMMAND_MODIFY_CURRENCY, handler->GetNameLink(target).c_str(), target->GetCurrency(uint32(currencyid)));
 
         return true;
     }
@@ -1176,7 +1187,7 @@ public:
             amount = -42000;
             for (; r < MAX_REPUTATION_RANK; ++r)
             {
-                std::string rank = handler->GetTrinityString(ReputationRankStrIndex[r]);
+                std::string rank = handler->GetSingularityString(ReputationRankStrIndex[r]);
                 if (rank.empty())
                     continue;
 
@@ -1284,28 +1295,6 @@ public:
 
         uint32 anim_id = atoi((char*)args);
         handler->GetSession()->GetPlayer()->SetUInt32Value(UNIT_NPC_EMOTESTATE , anim_id);
-
-        return true;
-    }
-
-    static bool HandleModifyArenaCommand(ChatHandler* handler, const char* args)
-    {
-        if (!*args)
-            return false;
-
-        Player* target = handler->getSelectedPlayer();
-        if (!target)
-        {
-            handler->SendSysMessage(LANG_PLAYER_NOT_FOUND);
-            handler->SetSentErrorMessage(true);
-            return false;
-        }
-
-        int32 amount = (uint32)atoi(args);
-
-        target->ModifyArenaPoints(amount);
-
-        handler->PSendSysMessage(LANG_COMMAND_MODIFY_ARENA, handler->GetNameLink(target).c_str(), target->GetArenaPoints());
 
         return true;
     }

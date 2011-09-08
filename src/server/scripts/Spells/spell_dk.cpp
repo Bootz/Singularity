@@ -383,10 +383,10 @@ class spell_dk_runic_power_feed : public SpellScriptLoader
                 if (Unit* caster = GetCaster())
                 {
                     // No power, dismiss Gargoyle
-                    if (caster->GetPower(POWER_RUNIC_POWER) < 30)
+                    if (caster->GetPower(POWER_RUNIC) < 30)
                         caster->RemoveAurasDueToSpell(DK_SPELL_SUMMON_GARGOYLE, caster->GetGUID());
                     else
-                        caster->ModifyPower(POWER_RUNIC_POWER, -30);
+                        caster->ModifyPower(POWER_RUNIC, -30);
                 }
             }
 

@@ -1074,14 +1074,14 @@ class ObjectMgr
         GameObjectData& NewGOData(uint32 guid) { return mGameObjectDataMap[guid]; }
         void DeleteGOData(uint32 guid);
 
-        TrinityStringLocale const* GetTrinityStringLocale(int32 entry) const
+        TrinityStringLocale const* GetSingularityStringLocale(int32 entry) const
         {
             TrinityStringLocaleMap::const_iterator itr = mTrinityStringLocaleMap.find(entry);
             if (itr == mTrinityStringLocaleMap.end()) return NULL;
             return &itr->second;
         }
-        const char *GetTrinityString(int32 entry, LocaleConstant locale_idx) const;
-        const char *GetTrinityStringForDBCLocale(int32 entry) const { return GetTrinityString(entry, DBCLocaleIndex); }
+        const char *GetSingularityString(int32 entry, LocaleConstant locale_idx) const;
+        const char *GetSingularityStringForDBCLocale(int32 entry) const { return GetSingularityString(entry, DBCLocaleIndex); }
         LocaleConstant GetDBCLocaleIndex() const { return DBCLocaleIndex; }
         void SetDBCLocaleIndex(LocaleConstant locale) { DBCLocaleIndex = locale; }
 

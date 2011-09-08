@@ -109,6 +109,7 @@ enum AchievementCriteriaTimedTypes
     ACHIEVEMENT_TIMED_TYPE_SPELL_TARGET     = 6,    // Timer is started by being target of spell with entry in timerStartEvent
     ACHIEVEMENT_TIMED_TYPE_CREATURE         = 7,    // Timer is started by killing creature with entry in timerStartEvent
     ACHIEVEMENT_TIMED_TYPE_ITEM             = 9,    // Timer is started by using item with entry in timerStartEvent
+    ACHIEVEMENT_TIMED_TYPE_UNK              = 10,   // Unknown
 
     ACHIEVEMENT_TIMED_TYPE_MAX,
 };
@@ -450,6 +451,15 @@ enum SummonPropFlags
     SUMMON_PROP_FLAG_UNK12           = 0x0800,              // 30 spells in 3.0.3, no idea
     SUMMON_PROP_FLAG_UNK13           = 0x1000,              // 8 spells in 3.0.3, siege vehicle
     SUMMON_PROP_FLAG_UNK14           = 0x2000,              // 2 spells in 3.0.3, escort?
+};
+
+// CreatureType.dbc
+enum CurrencyTypes
+{
+    CURRENCY_TYPE_CONQUEST_POINTS    = 390,
+    CURRENCY_TYPE_HONOR_POINTS       = 392,
+    CURRENCY_TYPE_JUSTICE_POINTS     = 395,
+    CURRENCY_TYPE_VALOR_POINTS       = 396
 };
 
 #endif

@@ -201,13 +201,13 @@ bool ChatHandler::HandleCooldownCommand(const char *args)
 
         if (!sSpellStore.LookupEntry(spell_id))
         {
-            PSendSysMessage(LANG_UNKNOWN_SPELL, target == m_session->GetPlayer() ? GetTrinityString(LANG_YOU) : tNameLink.c_str());
+            PSendSysMessage(LANG_UNKNOWN_SPELL, target == m_session->GetPlayer() ? GetSingularityString(LANG_YOU) : tNameLink.c_str());
             SetSentErrorMessage(true);
             return false;
         }
 
         target->RemoveSpellCooldown(spell_id, true);
-        PSendSysMessage(LANG_REMOVE_COOLDOWN, spell_id, target == m_session->GetPlayer() ? GetTrinityString(LANG_YOU) : tNameLink.c_str());
+        PSendSysMessage(LANG_REMOVE_COOLDOWN, spell_id, target == m_session->GetPlayer() ? GetSingularityString(LANG_YOU) : tNameLink.c_str());
    }
     return true;
 }
@@ -262,7 +262,7 @@ bool ChatHandler::HandleAddItemCommand(const char *args)
     if (!plTarget)
         plTarget = pl;
 
-    sLog->outDetail(GetTrinityString(LANG_ADDITEM), itemId, count);
+    sLog->outDetail(GetSingularityString(LANG_ADDITEM), itemId, count);
 
     ItemTemplate const *pProto = sObjectMgr->GetItemTemplate(itemId);
     if (!pProto)
@@ -341,7 +341,7 @@ bool ChatHandler::HandleAddItemSetCommand(const char *args)
     if (!playerTarget)
         playerTarget = player;
 
-    sLog->outDetail(GetTrinityString(LANG_ADDITEMSET), itemsetId);
+    sLog->outDetail(GetSingularityString(LANG_ADDITEMSET), itemsetId);
 
     bool found = false;
     ItemTemplateContainer const* its = sObjectMgr->GetItemTemplateStore();
@@ -953,13 +953,13 @@ bool ChatHandler::HandleLookupSkillCommand(const char *args)
                 char const* knownStr = "";
                 if (target && target->HasSkill(id))
                 {
-                    knownStr = GetTrinityString(LANG_KNOWN);
+                    knownStr = GetSingularityString(LANG_KNOWN);
                     uint32 curValue = target->GetPureSkillValue(id);
                     uint32 maxValue  = target->GetPureMaxSkillValue(id);
                     uint32 permValue = target->GetSkillPermBonusValue(id);
                     uint32 tempValue = target->GetSkillTempBonusValue(id);
 
-                    char const* valFormat = GetTrinityString(LANG_SKILL_VALUES);
+                    char const* valFormat = GetSingularityString(LANG_SKILL_VALUES);
                     snprintf(valStr, 50, valFormat, curValue, maxValue, permValue, tempValue);
                 }
 
@@ -1058,7 +1058,7 @@ bool ChatHandler::HandleLookupSpellCommand(const char *args)
 
                 // include rank in link name
                 if (rank)
-                    ss << GetTrinityString(LANG_SPELL_RANK) << rank;
+                    ss << GetSingularityString(LANG_SPELL_RANK) << rank;
 
                 if (m_session)
                     ss << " " << localeNames[loc] << "]|h|r";
@@ -1066,15 +1066,15 @@ bool ChatHandler::HandleLookupSpellCommand(const char *args)
                     ss << " " << localeNames[loc];
 
                 if (talent)
-                    ss << GetTrinityString(LANG_TALENT);
+                    ss << GetSingularityString(LANG_TALENT);
                 if (passive)
-                    ss << GetTrinityString(LANG_PASSIVE);
+                    ss << GetSingularityString(LANG_PASSIVE);
                 if (learn)
-                    ss << GetTrinityString(LANG_LEARN);
+                    ss << GetSingularityString(LANG_LEARN);
                 if (known)
-                    ss << GetTrinityString(LANG_KNOWN);
+                    ss << GetSingularityString(LANG_KNOWN);
                 if (active)
-                    ss << GetTrinityString(LANG_ACTIVE);
+                    ss << GetSingularityString(LANG_ACTIVE);
 
                 SendSysMessage(ss.str().c_str());
 
@@ -1141,12 +1141,12 @@ bool ChatHandler::HandleLookupQuestCommand(const char *args)
                             if (status == QUEST_STATUS_COMPLETE)
                             {
                                 if (target->GetQuestRewardStatus(qinfo->GetQuestId()))
-                                    statusStr = GetTrinityString(LANG_COMMAND_QUEST_REWARDED);
+                                    statusStr = GetSingularityString(LANG_COMMAND_QUEST_REWARDED);
                                 else
-                                    statusStr = GetTrinityString(LANG_COMMAND_QUEST_COMPLETE);
+                                    statusStr = GetSingularityString(LANG_COMMAND_QUEST_COMPLETE);
                             }
                             else if (status == QUEST_STATUS_INCOMPLETE)
-                                statusStr = GetTrinityString(LANG_COMMAND_QUEST_ACTIVE);
+                                statusStr = GetSingularityString(LANG_COMMAND_QUEST_ACTIVE);
                         }
 
                         if (m_session)
@@ -1184,12 +1184,12 @@ bool ChatHandler::HandleLookupQuestCommand(const char *args)
                 if (status == QUEST_STATUS_COMPLETE)
                 {
                     if (target->GetQuestRewardStatus(qinfo->GetQuestId()))
-                        statusStr = GetTrinityString(LANG_COMMAND_QUEST_REWARDED);
+                        statusStr = GetSingularityString(LANG_COMMAND_QUEST_REWARDED);
                     else
-                        statusStr = GetTrinityString(LANG_COMMAND_QUEST_COMPLETE);
+                        statusStr = GetSingularityString(LANG_COMMAND_QUEST_COMPLETE);
                 }
                 else if (status == QUEST_STATUS_INCOMPLETE)
-                    statusStr = GetTrinityString(LANG_COMMAND_QUEST_ACTIVE);
+                    statusStr = GetSingularityString(LANG_COMMAND_QUEST_ACTIVE);
             }
 
             if (m_session)
@@ -1432,25 +1432,25 @@ bool ChatHandler::HandleLookupFactionCommand(const char *args)
                 if (repState)                               // and then target != NULL also
                 {
                     uint32 index = target->GetReputationMgr().GetReputationRankStrIndex(factionEntry);
-                    std::string rankName = GetTrinityString(index);
+                    std::string rankName = GetSingularityString(index);
 
                     ss << " " << rankName << "|h|r (" << target->GetReputationMgr().GetReputation(factionEntry) << ")";
 
                     if (repState->Flags & FACTION_FLAG_VISIBLE)
-                        ss << GetTrinityString(LANG_FACTION_VISIBLE);
+                        ss << GetSingularityString(LANG_FACTION_VISIBLE);
                     if (repState->Flags & FACTION_FLAG_AT_WAR)
-                        ss << GetTrinityString(LANG_FACTION_ATWAR);
+                        ss << GetSingularityString(LANG_FACTION_ATWAR);
                     if (repState->Flags & FACTION_FLAG_PEACE_FORCED)
-                        ss << GetTrinityString(LANG_FACTION_PEACE_FORCED);
+                        ss << GetSingularityString(LANG_FACTION_PEACE_FORCED);
                     if (repState->Flags & FACTION_FLAG_HIDDEN)
-                        ss << GetTrinityString(LANG_FACTION_HIDDEN);
+                        ss << GetSingularityString(LANG_FACTION_HIDDEN);
                     if (repState->Flags & FACTION_FLAG_INVISIBLE_FORCED)
-                        ss << GetTrinityString(LANG_FACTION_INVISIBLE_FORCED);
+                        ss << GetSingularityString(LANG_FACTION_INVISIBLE_FORCED);
                     if (repState->Flags & FACTION_FLAG_INACTIVE)
-                        ss << GetTrinityString(LANG_FACTION_INACTIVE);
+                        ss << GetSingularityString(LANG_FACTION_INACTIVE);
                 }
                 else
-                    ss << GetTrinityString(LANG_FACTION_NOREPUTATION);
+                    ss << GetSingularityString(LANG_FACTION_NOREPUTATION);
 
                 SendSysMessage(ss.str().c_str());
 
@@ -1593,20 +1593,20 @@ bool ChatHandler::HandleLookupMapCommand(const char *args)
                     ss << id << " - [" << name << "]";
 
                 if (MapInfo->IsContinent())
-                    ss << GetTrinityString(LANG_CONTINENT);
+                    ss << GetSingularityString(LANG_CONTINENT);
 
                 switch(MapInfo->map_type)
                 {
-                    case MAP_INSTANCE:      ss << GetTrinityString(LANG_INSTANCE);      break;
-                    case MAP_BATTLEGROUND:  ss << GetTrinityString(LANG_BATTLEGROUND);  break;
-                    case MAP_ARENA:         ss << GetTrinityString(LANG_ARENA);         break;
+                    case MAP_INSTANCE:      ss << GetSingularityString(LANG_INSTANCE);      break;
+                    case MAP_BATTLEGROUND:  ss << GetSingularityString(LANG_BATTLEGROUND);  break;
+                    case MAP_ARENA:         ss << GetSingularityString(LANG_ARENA);         break;
                 }
 
                 if (MapInfo->IsRaid())
-                    ss << GetTrinityString(LANG_RAID);
+                    ss << GetSingularityString(LANG_RAID);
 
                 if (MapInfo->SupportsHeroicMode())
-                    ss << GetTrinityString(LANG_HEROIC);
+                    ss << GetSingularityString(LANG_HEROIC);
 
                 uint32 ResetTimeRaid = MapInfo->resetTimeRaid;
 
@@ -1620,7 +1620,7 @@ bool ChatHandler::HandleLookupMapCommand(const char *args)
                     ResetTimeHeroicStr = secsToTimeString(ResetTimeHeroic, true, false);
 
                 if (MapInfo->IsMountAllowed())
-                    ss << GetTrinityString(LANG_MOUNTABLE);
+                    ss << GetSingularityString(LANG_MOUNTABLE);
 
                 if (ResetTimeRaid && !ResetTimeHeroic)
                     PSendSysMessage(ss.str().c_str(), ResetTimeRaidStr.c_str());
@@ -2077,14 +2077,14 @@ bool ChatHandler::HandleNearGraveCommand(const char *args)
 
         g_team = data->team;
 
-        std::string team_name = GetTrinityString(LANG_COMMAND_GRAVEYARD_NOTEAM);
+        std::string team_name = GetSingularityString(LANG_COMMAND_GRAVEYARD_NOTEAM);
 
         if (g_team == 0)
-            team_name = GetTrinityString(LANG_COMMAND_GRAVEYARD_ANY);
+            team_name = GetSingularityString(LANG_COMMAND_GRAVEYARD_ANY);
         else if (g_team == HORDE)
-            team_name = GetTrinityString(LANG_COMMAND_GRAVEYARD_HORDE);
+            team_name = GetSingularityString(LANG_COMMAND_GRAVEYARD_HORDE);
         else if (g_team == ALLIANCE)
-            team_name = GetTrinityString(LANG_COMMAND_GRAVEYARD_ALLIANCE);
+            team_name = GetSingularityString(LANG_COMMAND_GRAVEYARD_ALLIANCE);
 
         PSendSysMessage(LANG_COMMAND_GRAVEYARDNEAREST, g_id, team_name.c_str(), zone_id);
     }
@@ -2093,11 +2093,11 @@ bool ChatHandler::HandleNearGraveCommand(const char *args)
         std::string team_name;
 
         if (g_team == 0)
-            team_name = GetTrinityString(LANG_COMMAND_GRAVEYARD_ANY);
+            team_name = GetSingularityString(LANG_COMMAND_GRAVEYARD_ANY);
         else if (g_team == HORDE)
-            team_name = GetTrinityString(LANG_COMMAND_GRAVEYARD_HORDE);
+            team_name = GetSingularityString(LANG_COMMAND_GRAVEYARD_HORDE);
         else if (g_team == ALLIANCE)
-            team_name = GetTrinityString(LANG_COMMAND_GRAVEYARD_ALLIANCE);
+            team_name = GetSingularityString(LANG_COMMAND_GRAVEYARD_ALLIANCE);
 
         if (g_team == ~uint32(0))
             PSendSysMessage(LANG_COMMAND_ZONENOGRAVEYARDS, zone_id);
@@ -2397,8 +2397,8 @@ bool ChatHandler::HandleListAurasCommand (const char * /*args*/)
         return false;
     }
 
-    char const* talentStr = GetTrinityString(LANG_TALENT);
-    char const* passiveStr = GetTrinityString(LANG_PASSIVE);
+    char const* talentStr = GetSingularityString(LANG_TALENT);
+    char const* passiveStr = GetSingularityString(LANG_PASSIVE);
 
     Unit::AuraApplicationMap const& uAuras = unit->GetAppliedAuras();
     PSendSysMessage(LANG_COMMAND_TARGET_LISTAURAS, uAuras.size());
@@ -2474,9 +2474,7 @@ bool ChatHandler::HandleResetHonorCommand (const char * args)
     if (!extractPlayerTarget((char*)args, &target))
         return false;
 
-    target->SetHonorPoints(0);
-    target->SetUInt32Value(PLAYER_FIELD_KILLS, 0);
-    target->SetUInt32Value(PLAYER_FIELD_LIFETIME_HONORBALE_KILLS, 0);
+    target->SetCurrency(CURRENCY_TYPE_HONOR_POINTS, 0);
     target->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_EARN_HONORABLE_KILL);
 
     return true;
@@ -3131,9 +3129,9 @@ bool ChatHandler::HandleBanInfoCharacterCommand(const char *args)
         if (fields[2].GetUInt8() && (!fields[1].GetUInt32() || unbandate >= time(NULL)))
             active = true;
         bool permanent = (fields[1].GetUInt32() == uint32(0));
-        std::string bantime = permanent ? GetTrinityString(LANG_BANINFO_INFINITE) : secsToTimeString(fields[1].GetUInt32(), true);
+        std::string bantime = permanent ? GetSingularityString(LANG_BANINFO_INFINITE) : secsToTimeString(fields[1].GetUInt32(), true);
         PSendSysMessage(LANG_BANINFO_HISTORYENTRY,
-            fields[0].GetCString(), bantime.c_str(), active ? GetTrinityString(LANG_BANINFO_YES) : GetTrinityString(LANG_BANINFO_NO), fields[4].GetCString(), fields[5].GetCString());
+            fields[0].GetCString(), bantime.c_str(), active ? GetSingularityString(LANG_BANINFO_YES) : GetSingularityString(LANG_BANINFO_NO), fields[4].GetCString(), fields[5].GetCString());
     }
     while (result->NextRow());
 
@@ -3159,9 +3157,9 @@ bool ChatHandler::HandleBanInfoHelper(uint32 accountid, char const* accountname)
         if (fields[2].GetBool() && (fields[1].GetUInt64() == (uint64)0 ||unbandate >= time(NULL)))
             active = true;
         bool permanent = (fields[1].GetUInt64() == (uint64)0);
-        std::string bantime = permanent ? GetTrinityString(LANG_BANINFO_INFINITE) : secsToTimeString(fields[1].GetUInt64(), true);
+        std::string bantime = permanent ? GetSingularityString(LANG_BANINFO_INFINITE) : secsToTimeString(fields[1].GetUInt64(), true);
         PSendSysMessage(LANG_BANINFO_HISTORYENTRY,
-            fields[0].GetCString(), bantime.c_str(), active ? GetTrinityString(LANG_BANINFO_YES) : GetTrinityString(LANG_BANINFO_NO), fields[4].GetCString(), fields[5].GetCString());
+            fields[0].GetCString(), bantime.c_str(), active ? GetSingularityString(LANG_BANINFO_YES) : GetSingularityString(LANG_BANINFO_NO), fields[4].GetCString(), fields[5].GetCString());
     } while (result->NextRow());
 
     return true;
@@ -3192,8 +3190,8 @@ bool ChatHandler::HandleBanInfoIPCommand(const char *args)
     Field *fields = result->Fetch();
     bool permanent = !fields[6].GetUInt64();
     PSendSysMessage(LANG_BANINFO_IPENTRY,
-        fields[0].GetCString(), fields[1].GetCString(), permanent ? GetTrinityString(LANG_BANINFO_NEVER) : fields[2].GetCString(),
-        permanent ? GetTrinityString(LANG_BANINFO_INFINITE) : secsToTimeString(fields[3].GetUInt64(), true).c_str(), fields[4].GetCString(), fields[5].GetCString());
+        fields[0].GetCString(), fields[1].GetCString(), permanent ? GetSingularityString(LANG_BANINFO_NEVER) : fields[2].GetCString(),
+        permanent ? GetSingularityString(LANG_BANINFO_INFINITE) : secsToTimeString(fields[3].GetUInt64(), true).c_str(), fields[4].GetCString(), fields[5].GetCString());
 
     return true;
 }

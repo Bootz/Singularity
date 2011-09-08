@@ -508,6 +508,31 @@ LOCK TABLES `character_battleground_random` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `character_currency`
+--
+
+DROP TABLE IF EXISTS `character_currency`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `character_currency` (
+  `guid` int(11) UNSIGNED NOT NULL,
+  `currency` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `count` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `thisweek` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`currency`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `character_currency`
+--
+
+LOCK TABLES `character_currency` WRITE;
+/*!40000 ALTER TABLE `character_currency` DISABLE KEYS */;
+/*!40000 ALTER TABLE `character_currency` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `character_declinedname`
 --
 
@@ -1032,8 +1057,6 @@ CREATE TABLE `character_stats` (
   `maxpower3` int(10) unsigned NOT NULL DEFAULT '0',
   `maxpower4` int(10) unsigned NOT NULL DEFAULT '0',
   `maxpower5` int(10) unsigned NOT NULL DEFAULT '0',
-  `maxpower6` int(10) unsigned NOT NULL DEFAULT '0',
-  `maxpower7` int(10) unsigned NOT NULL DEFAULT '0',
   `strength` int(10) unsigned NOT NULL DEFAULT '0',
   `agility` int(10) unsigned NOT NULL DEFAULT '0',
   `stamina` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1141,10 +1164,6 @@ CREATE TABLE IF NOT EXISTS `characters` (
   `zone` smallint(5) unsigned NOT NULL DEFAULT '0',
   `death_expire_time` int(10) unsigned NOT NULL DEFAULT '0',
   `taxi_path` text,
-  `arenaPoints` int(10) unsigned NOT NULL DEFAULT '0',
-  `totalHonorPoints` int(10) unsigned NOT NULL DEFAULT '0',
-  `todayHonorPoints` int(10) unsigned NOT NULL DEFAULT '0',
-  `yesterdayHonorPoints` int(10) unsigned NOT NULL DEFAULT '0',
   `totalKills` int(10) unsigned NOT NULL DEFAULT '0',
   `todayKills` smallint(5) unsigned NOT NULL DEFAULT '0',
   `yesterdayKills` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -1158,21 +1177,15 @@ CREATE TABLE IF NOT EXISTS `characters` (
   `power3` int(10) unsigned NOT NULL DEFAULT '0',
   `power4` int(10) unsigned NOT NULL DEFAULT '0',
   `power5` int(10) unsigned NOT NULL DEFAULT '0',
-  `power6` int(10) unsigned NOT NULL DEFAULT '0',
-  `power7` int(10) unsigned NOT NULL DEFAULT '0',
-  `power8` int(10) unsigned NOT NULL DEFAULT '0',
-  `power9` int(10) unsigned NOT NULL DEFAULT '0',
-  `power10` int(10) unsigned NOT NULL DEFAULT '0',
-  `power11` int(10) unsigned NOT NULL DEFAULT '0',
   `latency` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `speccount` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `activespec` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `unknown` int(10) unsigned NOT NULL DEFAULT '0',
   `exploredZones` longtext,
   `equipmentCache` longtext,
-  `unknown2` int(10) unsigned NOT NULL DEFAULT '0',
   `knownTitles` longtext,
+  `achievementPoints` smallint(5) unsigned NOT NULL DEFAULT '0',
   `actionBars` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `guildId` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
   `deleteInfos_Account` int(10) unsigned DEFAULT NULL,
   `deleteInfos_Name` varchar(12) DEFAULT NULL,
   `deleteDate` int(10) unsigned DEFAULT NULL,
@@ -1212,7 +1225,6 @@ CREATE TABLE `corpse` (
   `itemCache` text NOT NULL,
   `bytes1` int(10) unsigned NOT NULL DEFAULT '0',
   `bytes2` int(10) unsigned NOT NULL DEFAULT '0',
-  `guildId` int(10) unsigned NOT NULL DEFAULT '0',
   `flags` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `dynFlags` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `time` int(10) unsigned NOT NULL DEFAULT '0',

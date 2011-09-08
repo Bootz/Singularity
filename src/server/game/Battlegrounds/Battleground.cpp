@@ -47,7 +47,7 @@ namespace Trinity
 
             void operator()(WorldPacket& data, LocaleConstant loc_idx)
             {
-                char const* text = sObjectMgr->GetTrinityString(_textId, loc_idx);
+                char const* text = sObjectMgr->GetSingularityString(_textId, loc_idx);
                 if (_args)
                 {
                     // we need copy va_list before use or original va_list will corrupted
@@ -93,9 +93,9 @@ namespace Trinity
 
             void operator()(WorldPacket& data, LocaleConstant loc_idx)
             {
-                char const* text = sObjectMgr->GetTrinityString(_textId, loc_idx);
-                char const* arg1str = _arg1 ? sObjectMgr->GetTrinityString(_arg1, loc_idx) : "";
-                char const* arg2str = _arg2 ? sObjectMgr->GetTrinityString(_arg2, loc_idx) : "";
+                char const* text = sObjectMgr->GetSingularityString(_textId, loc_idx);
+                char const* arg1str = _arg1 ? sObjectMgr->GetSingularityString(_arg1, loc_idx) : "";
+                char const* arg2str = _arg2 ? sObjectMgr->GetSingularityString(_arg2, loc_idx) : "";
 
                 char str[2048];
                 snprintf(str, 2048, text, arg1str, arg2str);
@@ -801,7 +801,7 @@ void Battleground::EndBattleground(uint32 winner)
             {
                 UpdatePlayerScore(plr, SCORE_BONUS_HONOR, GetBonusHonorFromKill(winner_kills));
                 if (CanAwardArenaPoints())
-                    plr->ModifyArenaPoints(winner_arena);
+                    // plr->ModifyArenaPoints(winner_arena);
                 if (!plr->GetRandomWinner())
                     plr->SetRandomWinner(true);
             }
@@ -1603,7 +1603,7 @@ void Battleground::PSendMessageToAll(int32 entry, ChatMsg type, Player const* so
 
 void Battleground::SendWarningToAll(int32 entry, ...)
 {
-    const char *format = sObjectMgr->GetTrinityStringForDBCLocale(entry);
+    const char *format = sObjectMgr->GetSingularityStringForDBCLocale(entry);
 
     char str[1024];
     va_list ap;
@@ -1645,10 +1645,10 @@ void Battleground::EndNow()
 }
 
 // To be removed
-const char* Battleground::GetTrinityString(int32 entry)
+const char* Battleground::GetSingularityString(int32 entry)
 {
     // FIXME: now we have different DBC locales and need localized message for each target client
-    return sObjectMgr->GetTrinityStringForDBCLocale(entry);
+    return sObjectMgr->GetSingularityStringForDBCLocale(entry);
 }
 
 // IMPORTANT NOTICE:

@@ -118,6 +118,7 @@ class CreatureAI;
 class ZoneScript;
 class Unit;
 class Transport;
+class Item;
 
 typedef UNORDERED_MAP<Player*, UpdateData> UpdateDataMapType;
 
@@ -330,7 +331,9 @@ class Object
         Unit* ToUnit(){ if (GetTypeId() == TYPEID_UNIT || GetTypeId() == TYPEID_PLAYER) return reinterpret_cast<Unit*>(this); else return NULL; }
         const Unit* ToUnit() const {if (GetTypeId() == TYPEID_UNIT || GetTypeId() == TYPEID_PLAYER) return (const Unit*)((Unit*)this); else return NULL; }
         GameObject* ToGameObject(){ if (GetTypeId() == TYPEID_GAMEOBJECT) return reinterpret_cast<GameObject*>(this); else return NULL; }
-        const GameObject* ToGameObject() const {if (GetTypeId() == TYPEID_GAMEOBJECT) return (const GameObject*)((GameObject*)this); else return NULL; }
+        const GameObject* ToGameObject() const { if (GetTypeId() == TYPEID_GAMEOBJECT) return (const GameObject*)((GameObject*)this); else return NULL; }
+        Item* ToItem(){ if (GetTypeId() == TYPEID_ITEM || GetTypeId() == TYPEID_CONTAINER) return reinterpret_cast<Item*>(this); else return NULL; }
+        const Item* ToItem() const { if (GetTypeId() == TYPEID_ITEM || GetTypeId() == TYPEID_CONTAINER) return (const Item*)((Item*)this); else return NULL; }
     protected:
 
         Object ();
@@ -488,10 +491,11 @@ struct MovementInfo
     Position pos;
     uint32  time;
     // transport
-    uint64  t_guid;
+    uint64 t_guid;
     Position t_pos;
-    uint32  t_time;
-    uint32  t_time2;
+    uint32 t_time;
+    uint32 t_time2;
+    uint32 t_time3;
     int8    t_seat;
     // swimming/flying
     float   pitch;
@@ -508,7 +512,7 @@ struct MovementInfo
         guid = 0;
         flags = 0;
         flags2 = 0;
-        time = t_time = t_time2 = fallTime = 0;
+        time = t_time = t_time2 = t_time3 = fallTime = 0;
         splineElevation = 0;
         pitch = j_zspeed = j_sinAngle = j_cosAngle = j_xyspeed = 0.0f;
         t_guid = 0;

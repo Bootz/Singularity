@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __TRINITY_ACHIEVEMENTMGR_H
-#define __TRINITY_ACHIEVEMENTMGR_H
+#ifndef _ACHIEVEMENTMGR_H
+#define _ACHIEVEMENTMGR_H
 
 #include <map>
 #include <string>
@@ -262,7 +262,9 @@ class AchievementMgr
         Player* GetPlayer() const { return m_player; }
         void UpdateTimedAchievements(uint32 timeDiff);
         void StartTimedAchievement(AchievementCriteriaTimedTypes type, uint32 entry, uint32 timeLost = 0);
-        void RemoveTimedAchievement(AchievementCriteriaTimedTypes type, uint32 entry);   // used for quest and scripted timed achievements
+        void RemoveTimedAchievement(AchievementCriteriaTimedTypes type, uint32 entry);   // used for quest and scripted timed achievements        
+        uint32 m_achievementPoints;
+        uint32 GetAchievementPoints() const { return m_achievementPoints; }
 
     private:
         enum ProgressType { PROGRESS_SET, PROGRESS_ACCUMULATE, PROGRESS_HIGHEST };
@@ -275,9 +277,9 @@ class AchievementMgr
         bool IsCompletedCriteria(AchievementCriteriaEntry const* achievementCriteria, AchievementEntry const* achievement);
         bool IsCompletedAchievement(AchievementEntry const* entry);
         bool CanUpdateCriteria(AchievementCriteriaEntry const* criteria, AchievementEntry const* achievement);
-        void BuildAllDataPacket(WorldPacket *data) const;
+        void BuildAllDataPacket(WorldPacket *data) const;        
 
-        Player* m_player;
+        Player* m_player;        
         CriteriaProgressMap m_criteriaProgress;
         CompletedAchievementMap m_completedAchievements;
         typedef std::map<uint32, uint32> TimedAchievementMap;

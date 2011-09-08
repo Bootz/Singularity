@@ -9,7 +9,7 @@ UPDATE creature_template SET AIName = 'EventAI' WHERE entry IN (...);
 
 =========================================================
 WARNING: THIS DOCUMENTATION IS NOT ALWAYS UP TO DATE.
-FOR MORE UP-TO-DATE INFORMATION, CHECK THE TRINITY WIKI.
+FOR MORE UP-TO-DATE INFORMATION, CHECK THE SINGULARITY WIKI.
 =========================================================
 
 =========================================

@@ -222,8 +222,8 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
 
             SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
                                                             // this enables popup window (pet abandon, cancel)
-            SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
-            SetPower(POWER_HAPPINESS, fields[12].GetUInt32());
+//            SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
+//            SetPower(POWER_HAPPINESS, fields[12].GetUInt32());
             setPowerType(POWER_FOCUS);
             break;
         default:
@@ -411,7 +411,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
                 owner, PET_SAVE_AS_CURRENT, PET_SAVE_LAST_STABLE_SLOT);
         // save pet
         std::ostringstream ss;
-        ss  << "INSERT INTO character_pet (id, entry,  owner, modelid, level, exp, Reactstate, slot, name, renamed, curhealth, curmana, curhappiness, abdata, savetime, resettalents_cost, resettalents_time, CreatedBySpell, PetType) "
+        ss  << "INSERT INTO character_pet (id, entry,  owner, modelid, level, exp, Reactstate, slot, name, renamed, curhealth, curmana, abdata, savetime, resettalents_cost, resettalents_time, CreatedBySpell, PetType) "
             << "VALUES ("
             << m_charmInfo->GetPetNumber() << ", "
             << GetEntry() << ", "
@@ -424,8 +424,8 @@ void Pet::SavePetToDB(PetSaveMode mode)
             << name.c_str() << "', "
             << uint32(HasByteFlag(UNIT_FIELD_BYTES_2, 2, UNIT_CAN_BE_RENAMED) ? 0 : 1) << ", "
             << curhealth << ", "
-            << curmana << ", "
-            << GetPower(POWER_HAPPINESS) << ", '";
+            << curmana << ", ";
+//            << GetPower(POWER_HAPPINESS) << ", '";
 
         for (uint32 i = ACTION_BAR_INDEX_START; i < ACTION_BAR_INDEX_END; ++i)
         {
@@ -473,10 +473,10 @@ void Pet::setDeathState(DeathState s)                       // overwrite virtual
             SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0x00);
             RemoveFlag (UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
 
-             //lose happiness when died and not in BG/Arena
-            MapEntry const* mapEntry = sMapStore.LookupEntry(GetMapId());
-            if (!mapEntry || (mapEntry->map_type != MAP_ARENA && mapEntry->map_type != MAP_BATTLEGROUND))
-                ModifyPower(POWER_HAPPINESS, -HAPPINESS_LEVEL_SIZE);
+            // //lose happiness when died and not in BG/Arena
+            //MapEntry const* mapEntry = sMapStore.LookupEntry(GetMapId());
+            //if (!mapEntry || (mapEntry->map_type != MAP_ARENA && mapEntry->map_type != MAP_BATTLEGROUND))
+            //    ModifyPower(POWER_HAPPINESS, -HAPPINESS_LEVEL_SIZE);
 
             //SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
         }
@@ -626,23 +626,25 @@ void Creature::Regenerate(Powers power)
 
 void Pet::LoseHappiness()
 {
-    uint32 curValue = GetPower(POWER_HAPPINESS);
-    if (curValue <= 0)
-        return;
-    int32 addvalue = 670;                                   //value is 70/35/17/8/4 (per min) * 1000 / 8 (timer 7.5 secs)
-    if (isInCombat())                                        //we know in combat happiness fades faster, multiplier guess
-        addvalue = int32(addvalue * 1.5);
-    ModifyPower(POWER_HAPPINESS, -addvalue);
+    //uint32 curValue = GetPower(POWER_HAPPINESS);
+    //if (curValue <= 0)
+    //    return;
+    //int32 addvalue = 670;                                   //value is 70/35/17/8/4 (per min) * 1000 / 8 (timer 7.5 secs)
+    //if (isInCombat())                                        //we know in combat happiness fades faster, multiplier guess
+    //    addvalue = int32(addvalue * 1.5);
+    //ModifyPower(POWER_HAPPINESS, -addvalue);
 }
 
 HappinessState Pet::GetHappinessState()
 {
-    if (GetPower(POWER_HAPPINESS) < HAPPINESS_LEVEL_SIZE)
+    /*if (GetPower(POWER_HAPPINESS) < HAPPINESS_LEVEL_SIZE)
         return UNHAPPY;
     else if (GetPower(POWER_HAPPINESS) >= HAPPINESS_LEVEL_SIZE * 2)
         return HAPPY;
     else
-        return CONTENT;
+        return CONTENT;*/
+    //TODO FIX ME:
+    return HAPPY;
 }
 
 bool Pet::CanTakeMoreActiveSpells(uint32 spellid)
@@ -796,8 +798,8 @@ bool Pet::CreateBaseAtTamed(CreatureTemplate const * cinfo, Map * map, uint32 ph
     if (!Create(guid, map, phaseMask, cinfo->Entry, pet_number))
         return false;
 
-    SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
-    SetPower(POWER_HAPPINESS, 166500);
+//    SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
+    //SetPower(POWER_HAPPINESS, 166500);
     setPowerType(POWER_FOCUS);
     SetUInt32Value(UNIT_FIELD_PET_NAME_TIMESTAMP, 0);
     SetUInt32Value(UNIT_FIELD_PETEXPERIENCE, 0);

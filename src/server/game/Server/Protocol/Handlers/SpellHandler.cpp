@@ -324,10 +324,11 @@ void WorldSession::HandleGameobjectReportUse(WorldPacket& recvPacket)
 void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
 {
     uint32 spellId;
+    uint32 glyphIndex;
     uint8  castCount, castFlags;
-    recvPacket >> castCount >> spellId >> castFlags;
+    recvPacket >> castCount >> spellId >> castFlags >> glyphIndex;
 
-    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: got cast spell packet, castCount: %u, spellId: %u, castFlags: %u, data length = %u", castCount, spellId, castFlags, (uint32)recvPacket.size());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: got cast spell packet, castCount: %u, spellId: %u, castFlags: %u, glyphIndex: %u, data length = %u", castCount, spellId, castFlags, glyphIndex, (uint32)recvPacket.size());
 
     // ignore for remote control state (for player case)
     Unit* mover = _player->m_mover;
@@ -399,7 +400,8 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
     }
 
     Spell *spell = new Spell(mover, spellInfo, false);
-    spell->m_cast_count = castCount;                       // set count of casts
+    spell->m_cast_count = castCount;                       // set count of casts    
+    spell->m_glyphIndex = glyphIndex;
     spell->prepare(&targets);
 }
 

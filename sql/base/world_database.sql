@@ -1005,6 +1005,7 @@ CREATE TABLE `creature_classlevelstats` (
 LOCK TABLES `creature_classlevelstats` WRITE;
 /*!40000 ALTER TABLE `creature_classlevelstats` DISABLE KEYS */;
 INSERT INTO `creature_classlevelstats` VALUES
+(1,1,42,1,1,0,8),
 (2,1,55,1,1,0,20),
 (3,1,71,1,1,0,33),
 (4,1,86,1,1,0,68),

@@ -84,6 +84,7 @@ extern DBCStorage <CharStartOutfitEntry>         sCharStartOutfitStore;
 extern DBCStorage <CharTitlesEntry>              sCharTitlesStore;
 extern DBCStorage <ChrClassesEntry>              sChrClassesStore;
 extern DBCStorage <ChrRacesEntry>                sChrRacesStore;
+extern DBCStorage <ChrPowerTypesEntry>           sChrPowerTypesStore;
 extern DBCStorage <CinematicSequencesEntry>      sCinematicSequencesStore;
 extern DBCStorage <CreatureDisplayInfoEntry>     sCreatureDisplayInfoStore;
 extern DBCStorage <CreatureFamilyEntry>          sCreatureFamilyStore;
@@ -128,7 +129,7 @@ extern DBCStorage <ItemDamageEntry>              sItemDamageTwoHandStore;
 extern DBCStorage <ItemDamageEntry>              sItemDamageTwoHandCasterStore;
 extern DBCStorage <ItemDamageEntry>              sItemDamageWandStore;
 //extern DBCStorage <ItemDisplayInfoEntry>      sItemDisplayInfoStore; -- not used currently
-extern DBCStorage <ItemExtendedCostEntry>        sItemExtendedCostStore;
+//extern DBCStorage <ItemExtendedCostEntry>        sItemExtendedCostStore;
 extern DBCStorage <ItemLimitCategoryEntry>       sItemLimitCategoryStore;
 extern DBCStorage <ItemRandomPropertiesEntry>    sItemRandomPropertiesStore;
 extern DBCStorage <ItemRandomSuffixEntry>        sItemRandomSuffixStore;

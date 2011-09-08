@@ -26,6 +26,7 @@
 
 class Unit;
 class Player;
+class Quest;
 struct AISpellInfoType;
 
 // Default script texts

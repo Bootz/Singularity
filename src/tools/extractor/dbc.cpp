@@ -47,10 +47,11 @@ void ExtractDBCFiles(int locale, bool basicLocale)
 			   pFileEntry->szFileName != NULL)
             {
                 std::string name = pFileEntry->szFileName;
-                if (i != 0)
+                if (i != 0 && i < 7 )
                 {
-                    if(name.find(langs[locale]) == 0)
+                    if (name.find(langs[locale]) == 0)
                         name = name.substr(strlen(langs[locale]) + 1);
+
                     else
                     {
                         pFileEntry++;
@@ -62,10 +63,10 @@ void ExtractDBCFiles(int locale, bool basicLocale)
 					name.rfind(".db2") == name.length() - strlen(".db2"))
                 {
                     //Verify if this dbc isn't in the list yet. StormLibs return some extra dbcs :P
-                    if(i != 0)
+                    if (i != 0)
                     {
                         bool alreadyExist = false;
-                        for(std::set<std::pair<int, std::string> >::iterator itr = dbcfiles.begin(); itr != dbcfiles.end(); itr++)
+                        for (std::set<std::pair<int, std::string> >::iterator itr = dbcfiles.begin(); itr != dbcfiles.end(); itr++)
                         {
                             if(itr->second == name)
                             {
@@ -73,12 +74,14 @@ void ExtractDBCFiles(int locale, bool basicLocale)
                                 break;
                             }
                         }
-                        if(alreadyExist)
+
+                        if (alreadyExist)
                         {
                             pFileEntry++;
                             continue;
                         }
                     }
+
                     dbcfiles.insert(std::pair<int, std::string>(i, name));
                     foundCount++;
                 }
@@ -91,7 +94,7 @@ void ExtractDBCFiles(int locale, bool basicLocale)
     printf("Found %i dbc files\n", foundCount);
 	
     std::string path = "./dbc/";
-    if(!basicLocale)
+    if (!basicLocale)
     {
         path += langs[locale];
         path += "/";
@@ -100,18 +103,19 @@ void ExtractDBCFiles(int locale, bool basicLocale)
 	
     // extract DBCs
     int count = 0;
+
     for (std::set<std::pair<int, std::string> >::iterator iter = dbcfiles.begin(); iter != dbcfiles.end(); ++iter)
     {
         std::string filename = path;
         filename += (iter->second.c_str() + strlen("DBFilesClient\\"));
 		
-        if(ExtractFileToHardDrive(localeMPQ[iter->first], iter->second.c_str(), filename.c_str()) == ERROR_SUCCESS)
+        if (ExtractFileToHardDrive(localeMPQ[0], iter->second.c_str(), filename.c_str()) == ERROR_SUCCESS)
             ++count;
+
         else
-        {
             assert(false);
-        }
     }
+
     printf("Extracted %u DBC files\n\n", count);
 }
 

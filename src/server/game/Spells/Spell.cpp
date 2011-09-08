@@ -3837,8 +3837,8 @@ void Spell::SendSpellStart()
          && m_spellInfo->powerType != POWER_HEALTH)
         castFlags |= CAST_FLAG_POWER_LEFT_SELF;
 
-    if (m_spellInfo->runeCostID && m_spellInfo->powerType == POWER_RUNE)
-        castFlags |= CAST_FLAG_UNKNOWN_19;
+    //if (m_spellInfo->runeCostID && m_spellInfo->powerType == POWER_RUNE)
+    //    castFlags |= CAST_FLAG_UNKNOWN_19;
 
     WorldPacket data(SMSG_SPELL_START, (8+8+4+4+2));
     if (m_CastItem)
@@ -3887,15 +3887,15 @@ void Spell::SendSpellGo()
         && m_spellInfo->powerType != POWER_HEALTH)
         castFlags |= CAST_FLAG_POWER_LEFT_SELF; // should only be sent to self, but the current messaging doesn't make that possible
 
-    if ((m_caster->GetTypeId() == TYPEID_PLAYER)
-        && (m_caster->getClass() == CLASS_DEATH_KNIGHT)
-        && m_spellInfo->runeCostID
-        && m_spellInfo->powerType == POWER_RUNE)
-    {
-        castFlags |= CAST_FLAG_UNKNOWN_19;                   // same as in SMSG_SPELL_START
-        castFlags |= CAST_FLAG_RUNE_LIST;                    // rune cooldowns list
-        castFlags |= CAST_FLAG_UNKNOWN_9;                    // ??
-    }
+    //if ((m_caster->GetTypeId() == TYPEID_PLAYER)
+    //    && (m_caster->getClass() == CLASS_DEATH_KNIGHT)
+    //    && m_spellInfo->runeCostID
+    //    && m_spellInfo->powerType == POWER_RUNE)
+    //{
+    //    castFlags |= CAST_FLAG_UNKNOWN_19;                   // same as in SMSG_SPELL_START
+    //    castFlags |= CAST_FLAG_RUNE_LIST;                    // rune cooldowns list
+    //    castFlags |= CAST_FLAG_UNKNOWN_9;                    // ??
+    //}
 
     if (IsSpellHaveEffect(m_spellInfo, SPELL_EFFECT_ACTIVATE_RUNE))
     {
@@ -4296,7 +4296,7 @@ void Spell::TakePower()
     bool hit = true;
     if (m_caster->GetTypeId() == TYPEID_PLAYER)
     {
-        if (m_spellInfo->powerType == POWER_RAGE || m_spellInfo->powerType == POWER_ENERGY || m_spellInfo->powerType == POWER_RUNE)
+        if (m_spellInfo->powerType == POWER_RAGE || m_spellInfo->powerType == POWER_ENERGY/* || m_spellInfo->powerType == POWER_RUNE*/)
             if (uint64 targetGUID = m_targets.getUnitTargetGUID())
                 for (std::list<TargetInfo>::iterator ihit= m_UniqueTargetInfo.begin(); ihit != m_UniqueTargetInfo.end(); ++ihit)
                     if (ihit->targetGUID == targetGUID)
@@ -4315,11 +4315,11 @@ void Spell::TakePower()
 
     Powers powerType = Powers(m_spellInfo->powerType);
 
-    if (powerType == POWER_RUNE)
+    /*if (powerType == POWER_RUNE)
     {
         TakeRunePower(hit);
         return;
-    }
+    }*/
 
     if (!m_powerCost)
         return;
@@ -4349,8 +4349,8 @@ void Spell::TakePower()
 
 SpellCastResult Spell::CheckRuneCost(uint32 runeCostID)
 {
-    if (m_spellInfo->powerType != POWER_RUNE || !runeCostID)
-        return SPELL_CAST_OK;
+    //if (m_spellInfo->powerType != POWER_RUNE || !runeCostID)
+    //    return SPELL_CAST_OK;
 
     if (m_caster->GetTypeId() != TYPEID_PLAYER)
         return SPELL_CAST_OK;
@@ -4461,7 +4461,7 @@ void Spell::TakeRunePower(bool didHit)
     // you can gain some runic power when use runes
     if (didHit)
         if (int32 rp = int32(runeCostData->runePowerGain * sWorld->getRate(RATE_POWER_RUNICPOWER_INCOME)))
-            player->ModifyPower(POWER_RUNIC_POWER, int32(rp));
+            player->ModifyPower(POWER_RUNIC, int32(rp));
 }
 
 void Spell::TakeReagents()
@@ -4708,7 +4708,7 @@ SpellCastResult Spell::CheckCast(bool strict)
         if (non_caster_target)
         {
             // target state requirements (apply to non-self only), to allow cast affects to self like Dirty Deeds
-            if (!m_IsTriggeredSpell && m_spellInfo->GetSpellAuraRestrictions()->TargetAuraState && !target->HasAuraState(AuraState(m_spellInfo->GetSpellAuraRestrictions()->TargetAuraState), m_spellInfo, m_caster))
+            if (!m_IsTriggeredSpell && m_spellInfo->GetTargetAuraState() && !target->HasAuraState(AuraState(m_spellInfo->GetTargetAuraState()), m_spellInfo, m_caster))
                 return SPELL_FAILED_TARGET_AURASTATE;
 
             // Not allow casting on flying player or on vehicle player (if caster isnt vehicle)
@@ -5766,12 +5766,12 @@ SpellCastResult Spell::CheckPower()
     }
 
     //check rune cost only if a spell has PowerType == POWER_RUNE
-    if (m_spellInfo->powerType == POWER_RUNE)
-    {
-        SpellCastResult failReason = CheckRuneCost(m_spellInfo->runeCostID);
-        if (failReason != SPELL_CAST_OK)
-            return failReason;
-    }
+    //if (m_spellInfo->powerType == POWER_RUNE)
+    //{
+    //    SpellCastResult failReason = CheckRuneCost(m_spellInfo->runeCostID);
+    //    if (failReason != SPELL_CAST_OK)
+    //        return failReason;
+    //}
 
     // Check power amount
     Powers powerType = Powers(m_spellInfo->powerType);

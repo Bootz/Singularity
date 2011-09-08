@@ -52,42 +52,43 @@ enum Gender
 // Race value is index in ChrRaces.dbc
 enum Races
 {
-    RACE_HUMAN          = 1,
-    RACE_ORC            = 2,
-    RACE_DWARF          = 3,
-    RACE_NIGHTELF       = 4,
-    RACE_UNDEAD_PLAYER  = 5,
-    RACE_TAUREN         = 6,
-    RACE_GNOME          = 7,
-    RACE_TROLL          = 8,
-    RACE_GOBLIN         = 9,
-    RACE_BLOODELF       = 10,
-    RACE_DRAENEI        = 11,
-    //RACE_FEL_ORC        = 12,
-    //RACE_NAGA           = 13,
-    //RACE_BROKEN         = 14,
-    //RACE_SKELETON       = 15,
-    //RACE_VRYKUL         = 16,
-    //RACE_TUSKARR        = 17,
-    //RACE_FOREST_TROLL   = 18,
-    //RACE_TAUNKA         = 19,
+    RACE_HUMAN                = 1,
+    RACE_ORC                  = 2,
+    RACE_DWARF                = 3,
+    RACE_NIGHTELF             = 4,
+    RACE_UNDEAD_PLAYER        = 5,
+    RACE_TAUREN               = 6,
+    RACE_GNOME                = 7,
+    RACE_TROLL                = 8,
+    RACE_GOBLIN               = 9,
+    RACE_BLOODELF             = 10,
+    RACE_DRAENEI              = 11,
+    //RACE_FEL_ORC            = 12,
+    //RACE_NAGA               = 13,
+    //RACE_BROKEN             = 14,
+    //RACE_SKELETON           = 15,
+    //RACE_VRYKUL             = 16,
+    //RACE_TUSKARR            = 17,
+    //RACE_FOREST_TROLL       = 18,
+    //RACE_TAUNKA             = 19,
     //RACE_NORTHREND_SKELETON = 20,
-    //RACE_ICE_TROLL          = 21
-    RACE_WORGEN             = 22
+    //RACE_ICE_TROLL          = 21,
+    RACE_WORGEN               = 22,
+    RACE_GILNEAN              = 23
 };
 
 // max+1 for player race
-#define MAX_RACES         23
+#define MAX_RACES         24
 
 #define RACEMASK_ALL_PLAYABLE \
     ((1<<(RACE_HUMAN-1))   |(1<<(RACE_ORC-1))          |(1<<(RACE_DWARF-1))   | \
     (1<<(RACE_NIGHTELF-1))|(1<<(RACE_UNDEAD_PLAYER-1))|(1<<(RACE_TAUREN-1))  | \
     (1<<(RACE_GNOME-1))   |(1<<(RACE_TROLL-1))        |(1<<(RACE_BLOODELF-1))| \
-    (1<<(RACE_DRAENEI-1))   |(1<<(RACE_GOBLIN-1))   |(1<<(RACE_WORGEN-1)))
+    (1<<(RACE_DRAENEI-1))   |(1<<(RACE_GOBLIN-1))   |(1<<(RACE_WORGEN-1))   |(1<<(RACE_GILNEAN-1)))
 
 #define RACEMASK_ALLIANCE \
     ((1<<(RACE_HUMAN-1)) | (1<<(RACE_DWARF-1)) | (1<<(RACE_NIGHTELF-1)) | \
-    (1<<(RACE_GNOME-1))     |(1<<(RACE_DRAENEI-1))  |(1<<(RACE_WORGEN-1)))
+    (1<<(RACE_GNOME-1))     |(1<<(RACE_DRAENEI-1))  |(1<<(RACE_WORGEN-1))   |(1<<(RACE_GILNEAN-1)))
 
 #define RACEMASK_HORDE RACEMASK_ALL_PLAYABLE & ~RACEMASK_ALLIANCE
 
@@ -172,14 +173,9 @@ enum Powers
     POWER_RAGE                          = 1,
     POWER_FOCUS                         = 2,
     POWER_ENERGY                        = 3,
-    POWER_HAPPINESS                     = 4,
-    POWER_RUNE                          = 5,
-    POWER_RUNIC_POWER                   = 6,
-    POWER_SOUL_SHARDS                   = 7,
-    POWER_ECLIPSE                       = 8,
-    POWER_HOLY_POWER                    = 9,
-    MAX_POWERS                          = 11,     // checks are < not <=
-    POWER_ALL                           = 127,    // default for class?
+    POWER_RUNIC                         = 4,            // guess
+    MAX_POWERS                          = 5,            // checks are < not <=
+    POWER_ALL                           = 127,          // default for class?
     POWER_HEALTH                        = 0xFFFFFFFE    // (-2 as signed value)
 };
 
@@ -825,7 +821,17 @@ enum SpellEffects
     SPELL_EFFECT_TALENT_SPEC_SELECT        = 162,
     SPELL_EFFECT_163                       = 163,
     SPELL_EFFECT_REMOVE_AURA               = 164,
-    TOTAL_SPELL_EFFECTS                    = 165
+    SPELL_EFFECT_165                       = 165,
+    SPELL_EFFECT_166                       = 166,
+    SPELL_EFFECT_167                       = 167,
+    SPELL_EFFECT_168                       = 168,
+    SPELL_EFFECT_169                       = 169,
+    SPELL_EFFECT_170                       = 170,
+    SPELL_EFFECT_171                       = 171,
+    SPELL_EFFECT_172                       = 172,
+    SPELL_EFFECT_173                       = 173,
+    SPELL_EFFECT_174                       = 174,
+    TOTAL_SPELL_EFFECTS                    = 175
 };
 
 enum SpellCastResult

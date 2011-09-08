@@ -544,7 +544,7 @@ bool Unit::HasAuraTypeWithFamilyFlags(AuraType auraType, uint32 familyName, uint
 {
     if (!HasAuraType(auraType))
         return false;
-    AuraEffectList const &auras = GetAuraEffectsByType(auraType);    
+    AuraEffectList const &auras = GetAuraEffectsByType(auraType);
     for (AuraEffectList::const_iterator itr = auras.begin(); itr != auras.end(); ++itr)
         if (SpellEntry const *iterSpellProto = (*itr)->GetSpellProto())
             if (iterSpellProto->GetSpellFamilyName() == familyName && iterSpellProto->GetSpellClassOptions()->SpellFamilyFlags[0] & familyFlags)
@@ -3652,7 +3652,7 @@ void Unit::RemoveAurasDueToSpellByDispel(uint32 spellId, uint64 casterGUID, Unit
             {
                 case SPELLFAMILY_WARLOCK:
                 {
-                    // Unstable Affliction (crash if before removeaura?)                    
+                    // Unstable Affliction (crash if before removeaura?)
                     if (aura->GetSpellProto()->GetSpellClassOptions()->SpellFamilyFlags[1] & 0x0100)
                     {
                         if (AuraEffect const* aurEff = aura->GetEffect(EFFECT_0))
@@ -6880,7 +6880,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                         case POWER_ENERGY:
                             triggered_spell_id = 71882;
                             break;
-                        case POWER_RUNIC_POWER:
+                        case POWER_RUNIC:
                             triggered_spell_id = 71884;
                             break;
                         default:
@@ -6902,7 +6902,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                         case POWER_ENERGY:
                             triggered_spell_id = 71887;
                             break;
-                        case POWER_RUNIC_POWER:
+                        case POWER_RUNIC:
                             triggered_spell_id = 71885;
                             break;
                         default:
@@ -8974,7 +8974,7 @@ bool Unit::HandleOverrideClassScriptAuraProc(Unit *pVictim, uint32 /*damage*/, A
                 case POWER_MANA:   triggered_spell_id = 48542; break;
                 case POWER_RAGE:   triggered_spell_id = 48541; break;
                 case POWER_ENERGY: triggered_spell_id = 48540; break;
-                case POWER_RUNIC_POWER: triggered_spell_id = 48543; break;
+                case POWER_RUNIC: triggered_spell_id = 48543; break;
                 default:
                     break;
             }
@@ -9044,10 +9044,10 @@ void Unit::setPowerType(Powers new_powertype)
         case POWER_ENERGY:
             SetMaxPower(POWER_ENERGY, GetCreatePowers(POWER_ENERGY));
             break;
-        case POWER_HAPPINESS:
-            SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
-            SetPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
-            break;
+        //case POWER_HAPPINESS:
+        //    SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
+        //    SetPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
+        //    break;
     }
 }
 
@@ -13289,9 +13289,8 @@ Powers Unit::GetPowerTypeByAuraGroup(UnitMods unitMod) const
         case UNIT_MOD_RAGE:        return POWER_RAGE;
         case UNIT_MOD_FOCUS:       return POWER_FOCUS;
         case UNIT_MOD_ENERGY:      return POWER_ENERGY;
-        case UNIT_MOD_HAPPINESS:   return POWER_HAPPINESS;
-        case UNIT_MOD_RUNE:        return POWER_RUNE;
-        case UNIT_MOD_RUNIC_POWER: return POWER_RUNIC_POWER;
+        //case UNIT_MOD_HAPPINESS:   return POWER_HAPPINESS;
+        case UNIT_MOD_RUNIC_POWER: return POWER_RUNIC;
         default:
         case UNIT_MOD_MANA:        return POWER_MANA;
     }
@@ -13396,18 +13395,15 @@ void Unit::SetMaxHealth(uint32 val)
 
 void Unit::SetPower(Powers power, uint32 val)
 {
-    if (GetPower(power) == val)
-        return;
-
     uint32 maxPower = GetMaxPower(power);
     if (maxPower < val)
         val = maxPower;
 
-    SetStatInt32Value(UNIT_FIELD_POWER1 + power, val);
+    SetStatInt32Value(UNIT_FIELD_POWER1 + GetPowerIndexByClass(power, getClass()), val);
 
     WorldPacket data(SMSG_POWER_UPDATE);
     data.append(GetPackGUID());
-    data << uint8(power);
+    data << uint8(GetPowerIndexByClass(power, getClass()));
     data << uint32(val);
     SendMessageToSet(&data, GetTypeId() == TYPEID_PLAYER ? true : false);
 
@@ -13427,16 +13423,16 @@ void Unit::SetPower(Powers power, uint32 val)
                 owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_CUR_POWER);
         }
 
-        // Update the pet's character sheet with happiness damage bonus
-        if (pet->getPetType() == HUNTER_PET && power == POWER_HAPPINESS)
-            pet->UpdateDamagePhysical(BASE_ATTACK);
+        //// Update the pet's character sheet with happiness damage bonus
+        //if (pet->getPetType() == HUNTER_PET && power == POWER_HAPPINESS)
+        //    pet->UpdateDamagePhysical(BASE_ATTACK);
     }
 }
 
 void Unit::SetMaxPower(Powers power, uint32 val)
 {
     uint32 cur_power = GetPower(power);
-    SetStatInt32Value(UNIT_FIELD_MAXPOWER1 + power, val);
+    SetStatInt32Value(UNIT_FIELD_MAXPOWER1 + GetPowerIndexByClass(power, getClass()), val);
 
     // group update
     if (GetTypeId() == TYPEID_PLAYER)
@@ -13468,9 +13464,8 @@ uint32 Unit::GetCreatePowers(Powers power) const
         case POWER_RAGE:      return 1000;
         case POWER_FOCUS:     return (GetTypeId() == TYPEID_PLAYER || !((Creature const*)this)->isPet() || ((Pet const*)this)->getPetType() != HUNTER_PET ? 0 : 100);
         case POWER_ENERGY:    return 100;
-        case POWER_HAPPINESS: return (GetTypeId() == TYPEID_PLAYER || !((Creature const*)this)->isPet() || ((Pet const*)this)->getPetType() != HUNTER_PET ? 0 : 1050000);
-        case POWER_RUNIC_POWER: return 1000;
-        case POWER_RUNE:      return 0;
+//        case POWER_HAPPINESS: return (GetTypeId() == TYPEID_PLAYER || !((Creature const*)this)->isPet() || ((Pet const*)this)->getPetType() != HUNTER_PET ? 0 : 1050000);
+        case POWER_RUNIC: return 1000;
         case POWER_HEALTH:    return 0;
         default:
             break;
@@ -15479,7 +15474,7 @@ void Unit::SetRooted(bool apply)
         }
         else
         {
-            WorldPacket data(SMSG_SPLINE_MOVE_ROOT, 8);
+            WorldPacket data(SMSG_FORCE_MOVE_ROOT, 8);
             data.append(GetPackGUID());
             SendMessageToSet(&data, true);
             ToCreature()->StopMoving();
@@ -15498,7 +15493,7 @@ void Unit::SetRooted(bool apply)
             }
             else
             {
-                WorldPacket data(SMSG_SPLINE_MOVE_UNROOT, 8);
+                WorldPacket data(SMSG_FORCE_MOVE_UNROOT, 8);
                 data.append(GetPackGUID());
                 SendMessageToSet(&data, true);
             }
@@ -16240,7 +16235,7 @@ void Unit::KnockbackFrom(float x, float y, float speedXY, float speedZ)
         float vcos, vsin;
         GetSinCos(x, y, vsin, vcos);
 
-        WorldPacket data(SMSG_MOVE_KNOCK_BACK, (8+4+4+4+4+4));
+        WorldPacket data(SMSG_MULTIPLE_PACKETS, (8+4+4+4+4+4));
         data.append(GetPackGUID());
         data << uint32(0);                                      // Sequence
         data << float(vcos);                                    // x direction
@@ -16561,7 +16556,7 @@ void Unit::JumpTo(float speedXY, float speedZ, bool forward)
         float vcos = cos(angle+GetOrientation());
         float vsin = sin(angle+GetOrientation());
 
-        WorldPacket data(SMSG_MOVE_KNOCK_BACK, (8+4+4+4+4+4));
+        WorldPacket data(SMSG_MULTIPLE_PACKETS, (8+4+4+4+4+4));
         data.append(GetPackGUID());
         data << uint32(0);                                      // Sequence
         data << float(vcos);                                    // x direction
@@ -16821,8 +16816,28 @@ void Unit::BuildMovementPacket(ByteBuffer *data) const
             break;
     }
 
-    *data << uint32(GetUnitMovementFlags()); // movement flags
-    *data << uint16(m_movementInfo.flags2);    // 2.3.0
+    data->writeBits(GetUnitMovementFlags(), 30);
+    data->writeBits(m_movementInfo.flags2, 12);
+
+    // field mask
+    if (data->writeBit(GetUnitMovementFlags() & MOVEMENTFLAG_ONTRANSPORT))
+    {
+        data->writeBit(m_movementInfo.flags2 & MOVEMENTFLAG2_INTERPOLATED_MOVEMENT);
+        data->writeBit(0); // Flag for time3. Not implemented.
+    }
+
+    data->writeBit((GetUnitMovementFlags() & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING))
+                   || (m_movementInfo.flags2 & MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING));
+
+    if (data->writeBit(m_movementInfo.flags2 & MOVEMENTFLAG2_INTERPOLATED_TURNING))
+        data->writeBit(GetUnitMovementFlags() & MOVEMENTFLAG_JUMPING);
+
+    data->writeBit(GetUnitMovementFlags() & MOVEMENTFLAG_SPLINE_ELEVATION);
+
+    // has spline data
+    data->writeBit(0);
+
+    *data << uint64(GetGUID()); // added in 4.2.0
     *data << uint32(getMSTime());            // time
     *data << GetPositionX();
     *data << GetPositionY();
@@ -16837,15 +16852,15 @@ void Unit::BuildMovementPacket(ByteBuffer *data) const
         else if (GetTransport())
             data->append(GetTransport()->GetPackGUID());
         else
-            *data << (uint8)0;
+            *data << uint64(0);
 
         *data << float (GetTransOffsetX());
         *data << float (GetTransOffsetY());
         *data << float (GetTransOffsetZ());
         *data << float (GetTransOffsetO());
-        *data << uint32(GetTransTime());
         *data << uint8 (GetTransSeat());
-        
+        *data << uint32(GetTransTime());
+
         if (m_movementInfo.flags2 & MOVEMENTFLAG2_INTERPOLATED_MOVEMENT)             // & 0x400, 4.0.3
             *data << uint32(m_movementInfo.t_time2);
     }

@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 
+# Copyright (C) 2011 SingularityCore <http://www.singularitycore.org/>
 # Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
 # Author: leak
 # Date: 2010-12-06

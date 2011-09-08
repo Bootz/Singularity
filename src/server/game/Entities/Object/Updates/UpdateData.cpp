@@ -25,7 +25,7 @@
 #include "Opcodes.h"
 #include "World.h"
 
-UpdateData::UpdateData() : m_blockCount(0), m_map(0)
+UpdateData::UpdateData(uint16 map) : m_blockCount(0), m_map(map)
 {
 }
 
@@ -48,11 +48,9 @@ void UpdateData::AddUpdateBlock(const ByteBuffer &block)
 bool UpdateData::BuildPacket(WorldPacket *packet)
 {
     ASSERT(packet->empty());                                // shouldn't happen
-
     packet->Initialize(SMSG_UPDATE_OBJECT, 2 + 4 + (m_outOfRangeGUIDs.empty() ? 0 : 1 + 4 + 9 * m_outOfRangeGUIDs.size()) + m_data.wpos());
 
     *packet << uint16(m_map);
-
     *packet << uint32(!m_outOfRangeGUIDs.empty() ? m_blockCount + 1 : m_blockCount);
 
     if (!m_outOfRangeGUIDs.empty())
@@ -61,7 +59,9 @@ bool UpdateData::BuildPacket(WorldPacket *packet)
         *packet << uint32(m_outOfRangeGUIDs.size());
 
         for (std::set<uint64>::const_iterator i = m_outOfRangeGUIDs.begin(); i != m_outOfRangeGUIDs.end(); ++i)
+        {
             packet->appendPackGUID(*i);
+        }
     }
 
     packet->append(m_data);
@@ -77,5 +77,6 @@ void UpdateData::Clear()
     m_data.clear();
     m_outOfRangeGUIDs.clear();
     m_blockCount = 0;
+    m_map = 0;
 }
 

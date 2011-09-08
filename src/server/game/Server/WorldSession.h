@@ -25,11 +25,11 @@
 #define __WORLDSESSION_H
 
 #include "Common.h"
-#include "Opcodes.h"
 #include "SharedDefines.h"
 #include "AddonMgr.h"
 #include "DatabaseEnv.h"
 #include "World.h"
+#include "Opcodes.h"
 
 struct ItemTemplate;
 struct AuctionEntry;
@@ -149,6 +149,7 @@ public:
 
     virtual bool Process(WorldPacket * /*packet*/) { return true; }
     virtual bool ProcessLogout() const { return true; }
+    static Opcodes DropHighBytes(Opcodes opcode);
 
 protected:
     WorldSession * const m_pSession;
@@ -194,7 +195,7 @@ class WorldSession
         void SendAddonsInfo();
 
         void ReadMovementInfo(WorldPacket &data, MovementInfo *mi);
-        void WriteMovementInfo(WorldPacket *data, MovementInfo *mi);
+        void WriteMovementInfo(WorldPacket &data, MovementInfo *mi);
 
         void SendPacket(WorldPacket const* packet);
         void SendNotification(const char *format, ...) ATTR_PRINTF(2, 3);
@@ -330,7 +331,7 @@ class WorldSession
         // Locales
         LocaleConstant GetSessionDbcLocale() const { return m_sessionDbcLocale; }
         LocaleConstant GetSessionDbLocaleIndex() const { return m_sessionDbLocaleIndex; }
-        const char *GetTrinityString(int32 entry) const;
+        const char *GetSingularityString(int32 entry) const;
 
         uint32 GetLatency() const { return m_latency; }
         void SetLatency(uint32 latency) { m_latency = latency; }
@@ -655,8 +656,24 @@ class WorldSession
         void HandlePushQuestToParty(WorldPacket& recvPacket);
         void HandleQuestPushResult(WorldPacket& recvPacket);
 
-        bool processChatmessageFurtherAfterSecurityChecks(std::string&, uint32);
-        void HandleMessagechatOpcode(WorldPacket& recvPacket);
+        bool processChatmessageFurtherAfterSecurityChecks(std::string&, uint32 lang);
+        void HandleMessagechatOpcode(WorldPacket& recvPacket, uint32 type);
+        void HandleMessagechatSayOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatYellOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatChannelOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatWhisperOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatGuildOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatOfficerOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatAfkOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatDndOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatEmoteOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatPartyOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatPartyGuideOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatRaidOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatRaidLeaderOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatRaidWarningOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatBattlegroundOpcode(WorldPacket& recvPacket);
+        void HandleMessagechatBattlegroundLeaderOpcode(WorldPacket& recvPacket);
         void SendPlayerNotFoundNotice(std::string name);
         void SendPlayerAmbiguousNotice(std::string name);
         void SendWrongFactionNotice();
@@ -859,6 +876,8 @@ class WorldSession
         void HandleEjectPassenger(WorldPacket &data);
         void HandleEnterPlayerVehicle(WorldPacket &data);
         void HandleUpdateProjectilePosition(WorldPacket& recvPacket);
+
+        void HandleViolenceLevelOpcode(WorldPacket& recvPacket);
 
     private:
         void ProcessQueryCallbacks();

@@ -25,33 +25,17 @@ void WorldSession::HandleJoinChannel(WorldPacket& recvPacket)
     sLog->outDebug(LOG_FILTER_NETWORKIO, "Opcode %u", recvPacket.GetOpcode());
 
     uint32 _channelId;
-    bool _isCustom; // If channel is custom or not
-    bool _serverJoined; // player gets joined to channel on login (by server)
+    uint8 _isCustom; // If channel is custom or not
+    uint8 _serverJoined; // player gets joined to channel on login (by server)
     std::string _channelName;
     std::string _password;
-    std::string _unk;
-
-    recvPacket >> _channelId;
-
-    if (_channelId)
-    {
-        ChatChannelsEntry const* channel = sChatChannelsStore.LookupEntry(_channelId);
-        if (!channel)
-            return;
-
-        AreaTableEntry const* current_zone = GetAreaEntryByAreaID(_player->GetZoneId());
-        if (!current_zone)
-            return;
-
-        if (!_player->CanJoinConstantChannelInZone(channel, current_zone))
-            return;
-    }
-
+    
     recvPacket >> _isCustom;
     recvPacket >> _serverJoined;
-    recvPacket >> _password;
+
+    recvPacket >> _channelId;
     recvPacket >> _channelName;
-    recvPacket >> _unk; // always empty
+    recvPacket >> _password;
 
     if (_channelName.empty())
         return;

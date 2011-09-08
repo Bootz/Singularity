@@ -96,9 +96,9 @@ public:
 
         WorldPacket data;
         if (strncmp(args, "on", 3) == 0)
-            data.SetOpcode(SMSG_MOVE_SET_CAN_FLY);
+            data.SetOpcode(UNKNOWN_OPCODE);
         else if (strncmp(args, "off", 4) == 0)
-            data.SetOpcode(SMSG_MOVE_UNSET_CAN_FLY);
+            data.SetOpcode(UNKNOWN_OPCODE);
         else
         {
             handler->SendSysMessage(LANG_USE_BOL);
@@ -188,7 +188,7 @@ public:
     {
         if (!*args)
         {
-            handler->PSendSysMessage(LANG_YOU_ARE, handler->GetSession()->GetPlayer()->isGMVisible() ?  handler->GetTrinityString(LANG_VISIBLE) : handler->GetTrinityString(LANG_INVISIBLE));
+            handler->PSendSysMessage(LANG_YOU_ARE, handler->GetSession()->GetPlayer()->isGMVisible() ?  handler->GetSingularityString(LANG_VISIBLE) : handler->GetSingularityString(LANG_INVISIBLE));
             return true;
         }
 

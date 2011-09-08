@@ -230,6 +230,16 @@ pEffect SpellEffects[TOTAL_SPELL_EFFECTS]=
     &Spell::EffectActivateSpec,                             //162 SPELL_EFFECT_TALENT_SPEC_SELECT       activate primary/secondary spec
     &Spell::EffectNULL,                                     //163 unused
     &Spell::EffectRemoveAura,                               //164 SPELL_EFFECT_REMOVE_AURA
+    &Spell::EffectNULL,                                     //165
+    &Spell::EffectNULL,                                     //166
+    &Spell::EffectNULL,                                     //167
+    &Spell::EffectNULL,                                     //168
+    &Spell::EffectNULL,                                     //169
+    &Spell::EffectNULL,                                     //170
+    &Spell::EffectNULL,                                     //171
+    &Spell::EffectNULL,                                     //172
+    &Spell::EffectNULL,                                     //173
+    &Spell::EffectNULL,                                     //174
 };
 
 void Spell::EffectNULL(SpellEffectEntry const* /*effect*/)
@@ -3023,7 +3033,7 @@ void Spell::EffectSummonType(SpellEffectEntry const* effect)
                         summon->SetDisplayId(displayId);
 
                         //summon->SendUpdateToPlayerm_originalCaster->ToPlayer();
-                        WorldPacket data(SMSG_TOTEM_CREATED, 1+8+4+4);
+                        WorldPacket data(UNKNOWN_OPCODE, 1+8+4+4);
                         data << uint8(properties->Slot-1);
                         data << uint64(m_originalCaster->GetGUID());
                         data << uint32(duration);
@@ -4061,7 +4071,7 @@ void Spell::SpellDamageWeaponDmg(SpellEffectEntry const* effect)
             {
                 // Glyph of Death Strike
                 if (AuraEffect const * aurEff = m_caster->GetAuraEffect(59336, EFFECT_0))
-                    if (uint32 runic = std::min<uint32>(m_caster->GetPower(POWER_RUNIC_POWER), SpellMgr::CalculateSpellEffectAmount(aurEff->GetSpellProto(), EFFECT_1)))
+                    if (uint32 runic = std::min<uint32>(m_caster->GetPower(POWER_RUNIC), SpellMgr::CalculateSpellEffectAmount(aurEff->GetSpellProto(), EFFECT_1)))
                         AddPctN(totalDamagePercentMod, runic);
                 break;
             }
@@ -6996,7 +7006,7 @@ void Spell::EffectPlayerNotification(SpellEffectEntry const* effect)
         return;
     }
 
-    WorldPacket data(SMSG_PLAY_SOUND, 4);
+    WorldPacket data(SMSG_PLAY_MUSIC, 4);
     data << uint32(soundid);
     unitTarget->ToPlayer()->GetSession()->SendPacket(&data);
 }

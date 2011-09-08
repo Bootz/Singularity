@@ -276,8 +276,8 @@ int RASocket::svc(void)
     for(;;)
     {
         // show prompt
-        const char* tc_prompt = "TC> ";
-        if (size_t(peer().send(tc_prompt, strlen(tc_prompt))) != strlen(tc_prompt))
+        const char* sc_prompt = "SC> ";
+        if (size_t(peer().send(sc_prompt, strlen(sc_prompt))) != strlen(sc_prompt))
             return -1;
 
         std::string line;

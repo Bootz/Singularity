@@ -1,6 +1,7 @@
 <?php
 /*
  * Project Name: Config File Merge For Mangos/Trinity Server
+ * Copyright (C) 2011 SingularityCore <http://www.singularitycore.org/>
  * Date: 01.01.2010 inital version (0.0.1a)
  * Author: Paradox
  * Copyright: Paradox

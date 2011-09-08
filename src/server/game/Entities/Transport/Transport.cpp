@@ -598,9 +598,10 @@ void Transport::UpdateForMap(Map const* targetMap)
         {
             if (this != itr->getSource()->GetTransport())
             {
-                UpdateData transData;
-                BuildCreateUpdateBlockForPlayer(&transData, itr->getSource());
+                UpdateData transData(GetMapId());
                 WorldPacket packet;
+
+                BuildCreateUpdateBlockForPlayer(&transData, itr->getSource());
                 transData.BuildPacket(&packet);
                 itr->getSource()->SendDirectMessage(&packet);
             }
@@ -608,9 +609,10 @@ void Transport::UpdateForMap(Map const* targetMap)
     }
     else
     {
-        UpdateData transData;
-        BuildOutOfRangeUpdateBlock(&transData);
+        UpdateData transData(GetMapId());
         WorldPacket out_packet;
+
+        BuildOutOfRangeUpdateBlock(&transData);
         transData.BuildPacket(&out_packet);
 
         for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)

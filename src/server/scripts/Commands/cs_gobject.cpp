@@ -660,7 +660,7 @@ public:
             gobj->SetByteValue(GAMEOBJECT_BYTES_1, type, state);
         else if (type == 4)
         {
-            WorldPacket data(SMSG_GAMEOBJECT_CUSTOM_ANIM, 8+4);
+            WorldPacket data(UNKNOWN_OPCODE, 8+4);
             data << gobj->GetGUID();
             data << (uint32)(state);
             gobj->SendMessageToSet(&data, true);

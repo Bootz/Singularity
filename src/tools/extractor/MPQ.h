@@ -26,5 +26,6 @@ void LoadMapMPQFiles();
 
 int ExtractFileToHardDrive(HANDLE &MPQ_handle, const char * szArchivedFile, const char * szFileName);
 char* ExtractFileToMemory(HANDLE &MPQ_handle, const char * szArchivedFile, int & size );
+void GetMPQFileName(char* filename, int rev, const char* input_path, const char* locale = NULL);
 
 #endif

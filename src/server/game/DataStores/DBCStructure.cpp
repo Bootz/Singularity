@@ -115,7 +115,7 @@ uint32 SpellEntry::GetEffectMultipleValue(uint32 eff) const
 uint32 const* SpellEntry::GetEffectSpellClassMask(uint32 eff) const
 {
     if (SpellEffectEntry const* effectEntry = GetSpellEffectEntry(Id, eff))
-        return &effectEntry->EffectSpellClassMaskA[0];
+        return &effectEntry->EffectSpellClassMask[0];
     return NULL;
 }
 

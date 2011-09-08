@@ -7951,9 +7951,9 @@ bool ObjectMgr::LoadTrinityStrings(char const* table, int32 min_value, int32 max
     return true;
 }
 
-const char *ObjectMgr::GetTrinityString(int32 entry, LocaleConstant locale_idx) const
+const char *ObjectMgr::GetSingularityString(int32 entry, LocaleConstant locale_idx) const
 {
-    if (TrinityStringLocale const *msl = GetTrinityStringLocale(entry))
+    if (TrinityStringLocale const *msl = GetSingularityStringLocale(entry))
     {
         if (msl->Content.size() > size_t(locale_idx) && !msl->Content[locale_idx].empty())
             return msl->Content[locale_idx].c_str();
@@ -8668,7 +8668,7 @@ bool ObjectMgr::IsVendorItemValid(uint32 vendor_entry, uint32 item_id, int32 max
         return false;
     }
 
-    if (ExtendedCost && !sItemExtendedCostStore.LookupEntry(ExtendedCost))
+    if (ExtendedCost /*&& !sItemExtendedCostStore.LookupEntry(ExtendedCost)*/)
     {
         if (pl)
             ChatHandler(pl).PSendSysMessage(LANG_EXTENDED_COST_NOT_EXIST, ExtendedCost);
@@ -8794,7 +8794,7 @@ void ObjectMgr::CheckScripts(ScriptsType type, std::set<int32>& ids)
             {
                 case SCRIPT_COMMAND_TALK:
                 {
-                    if (!GetTrinityStringLocale (itrM->second.Talk.TextID))
+                    if (!GetSingularityStringLocale (itrM->second.Talk.TextID))
                         sLog->outErrorDb("Table `db_script_string` not has string id  %u used db script (ID: %u)", itrM->second.Talk.TextID, itrMM->first);
 
                     if (ids.find(itrM->second.Talk.TextID) != ids.end())
@@ -8814,7 +8814,7 @@ void ObjectMgr::LoadDbScriptStrings()
     std::set<int32> ids;
 
     for (int32 i = MIN_DB_SCRIPT_STRING_ID; i < MAX_DB_SCRIPT_STRING_ID; ++i)
-        if (GetTrinityStringLocale(i))
+        if (GetSingularityStringLocale(i))
             ids.insert(i);
 
     for (int type = SCRIPTS_FIRST; type < SCRIPTS_LAST; ++type)

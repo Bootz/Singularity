@@ -278,7 +278,7 @@ enum TrinityStrings
       // END
     LANG_COMMAND_SPAWNDIST              = 297,
     LANG_COMMAND_SPAWNTIME              = 298,
-    LANG_COMMAND_MODIFY_HONOR           = 299,
+    LANG_COMMAND_MODIFY_CURRENCY        = 299,
 
     LANG_YOUR_CHAT_DISABLED             = 300,
     LANG_YOU_DISABLE_CHAT               = 301,

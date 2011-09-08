@@ -51,7 +51,7 @@ namespace Trinity
                 : i_player(pl), i_msgtype(msgtype), i_textId(textId), i_achievementId(ach_id) {}
             void operator()(WorldPacket& data, LocaleConstant loc_idx)
             {
-                char const* text = sObjectMgr->GetTrinityString(i_textId, loc_idx);
+                char const* text = sObjectMgr->GetSingularityString(i_textId, loc_idx);
 
                 data << uint8(i_msgtype);
                 data << uint32(LANG_UNIVERSAL);
@@ -395,6 +395,7 @@ bool AchievementCriteriaDataSet::Meets(Player const* source, Unit const* target,
 AchievementMgr::AchievementMgr(Player *player)
 {
     m_player = player;
+    m_achievementPoints = 0;
 }
 
 AchievementMgr::~AchievementMgr()
@@ -572,6 +573,8 @@ void AchievementMgr::SaveToDB(SQLTransaction& trans)
 
 void AchievementMgr::LoadFromDB(PreparedQueryResult achievementResult, PreparedQueryResult criteriaResult)
 {
+    m_achievementPoints = 0;
+
     if (achievementResult)
     {
         do
@@ -583,6 +586,8 @@ void AchievementMgr::LoadFromDB(PreparedQueryResult achievementResult, PreparedQ
             AchievementEntry const* achievement = sAchievementStore.LookupEntry(achievementid);
             if (!achievement)
                 continue;
+
+            m_achievementPoints += achievement->points;
 
             CompletedAchievementData& ca = m_completedAchievements[achievementid];
             ca.date = time_t(fields[1].GetUInt32());
@@ -1979,6 +1984,7 @@ void AchievementMgr::CompletedAchievement(AchievementEntry const* achievement, b
     if (achievement->flags & ACHIEVEMENT_FLAG_COUNTER || HasAchieved(achievement))
         return;
 
+    m_achievementPoints += achievement->points;
     SendAchievementEarned(achievement);
     CompletedAchievementData& ca =  m_completedAchievements[achievement->ID];
     ca.date = time(NULL);
@@ -2049,7 +2055,7 @@ void AchievementMgr::SendAllAchievementData() const
 
 void AchievementMgr::SendRespondInspectAchievements(Player* player) const
 {
-    WorldPacket data(SMSG_RESPOND_INSPECT_ACHIEVEMENTS, 9+m_completedAchievements.size()*8+4+m_criteriaProgress.size()*38+4);
+    WorldPacket data(UNKNOWN_OPCODE, 9+m_completedAchievements.size()*8+4+m_criteriaProgress.size()*38+4);
     data.append(GetPlayer()->GetPackGUID());
     BuildAllDataPacket(&data);
     player->GetSession()->SendPacket(&data);

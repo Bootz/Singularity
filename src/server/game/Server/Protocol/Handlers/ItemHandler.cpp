@@ -302,7 +302,7 @@ void WorldSession::HandleItemQuerySingleOpcode(WorldPacket & recv_data)
             }
         }
                                                             // guess size
-        WorldPacket data(SMSG_ITEM_QUERY_SINGLE_RESPONSE, 600);
+        WorldPacket data(UNKNOWN_OPCODE, 600);
         data << pProto->ItemId;
         data << pProto->Class;
         data << pProto->SubClass;
@@ -1013,7 +1013,7 @@ void WorldSession::HandleItemNameQueryOpcode(WorldPacket & recv_data)
             if (ItemSetNameLocale const *isnl = sObjectMgr->GetItemSetNameLocale(itemid))
                 sObjectMgr->GetLocaleString(isnl->Name, loc_idx, Name);
 
-        WorldPacket data(SMSG_ITEM_NAME_QUERY_RESPONSE, (4+Name.size()+1+4));
+        WorldPacket data(/*SMSG_ITEM_NAME_QUERY_RESPONSE*/UNKNOWN_OPCODE, (4+Name.size()+1+4));
         data << uint32(itemid);
         data << Name;
         data << uint32(pName->InventoryType);

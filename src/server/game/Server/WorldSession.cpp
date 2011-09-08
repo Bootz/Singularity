@@ -25,7 +25,6 @@
 #include "Common.h"
 #include "DatabaseEnv.h"
 #include "Log.h"
-#include "Opcodes.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "Player.h"
@@ -44,9 +43,19 @@
 #include "ScriptMgr.h"
 #include "Transport.h"
 
+Opcodes PacketFilter::DropHighBytes(Opcodes opcode)
+{
+    if (opcode & 0xFFFF0000) // check if any High byte is present
+        return Opcodes(opcode >> 16);
+
+    else
+        return Opcodes(opcode);
+}
+
 bool MapSessionFilter::Process(WorldPacket *packet)
 {
-    const OpcodeHandler* opHandle = opcodeTable[packet->GetOpcode()];
+    Opcodes opcode = DropHighBytes(packet->GetOpcode());
+    const OpcodeHandler* opHandle = opcodeTable[opcode];
 
     //let's check if our opcode can be really processed in Map::Update()
     if (opHandle->packetProcessing == PROCESS_INPLACE)
@@ -68,7 +77,8 @@ bool MapSessionFilter::Process(WorldPacket *packet)
 //OR packet handler is not thread-safe!
 bool WorldSessionFilter::Process(WorldPacket *packet)
 {
-    const OpcodeHandler* opHandle = opcodeTable[packet->GetOpcode()];
+    Opcodes opcode = DropHighBytes(packet->GetOpcode());
+    const OpcodeHandler* opHandle = opcodeTable[opcode];
     //check if packet handler is supposed to be safe
     if (opHandle->packetProcessing == PROCESS_INPLACE)
         return true;
@@ -538,7 +548,7 @@ void WorldSession::SendNotification(const char *format, ...)
 
 void WorldSession::SendNotification(uint32 string_id, ...)
 {
-    char const *format = GetTrinityString(string_id);
+    char const *format = GetSingularityString(string_id);
     if (format)
     {
         va_list ap;
@@ -554,9 +564,9 @@ void WorldSession::SendNotification(uint32 string_id, ...)
     }
 }
 
-const char *WorldSession::GetTrinityString(int32 entry) const
+const char *WorldSession::GetSingularityString(int32 entry) const
 {
-    return sObjectMgr->GetTrinityString(entry, GetSessionDbLocaleIndex());
+    return sObjectMgr->GetSingularityString(entry, GetSessionDbLocaleIndex());
 }
 
 void WorldSession::Handle_NULL(WorldPacket& recvPacket)
@@ -714,81 +724,6 @@ void WorldSession::SaveTutorialsData(SQLTransaction &trans)
     trans->Append(stmt);
 
     m_TutorialsChanged = false;
-}
-
-void WorldSession::ReadMovementInfo(WorldPacket &data, MovementInfo *mi)
-{
-    data >> mi->flags;
-    data >> mi->flags2;
-    data >> mi->time;
-    data >> mi->pos.PositionXYZOStream();
-
-    if (mi->HasMovementFlag(MOVEMENTFLAG_ONTRANSPORT))
-    {
-        data.readPackGUID(mi->t_guid);
-
-        data >> mi->t_pos.PositionXYZOStream();
-        data >> mi->t_time;
-        data >> mi->t_seat;
-
-        if (mi->HasExtraMovementFlag(MOVEMENTFLAG2_INTERPOLATED_MOVEMENT))
-            data >> mi->t_time2;
-
-        if (mi->pos.m_positionX != mi->t_pos.m_positionX)
-            if (GetPlayer()->GetTransport())
-                GetPlayer()->GetTransport()->UpdatePosition(mi);
-    }
-
-    if (mi->HasMovementFlag(MovementFlags(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (mi->HasExtraMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING)))
-        data >> mi->pitch;
-
-    data >> mi->fallTime;
-
-    if (mi->HasMovementFlag(MOVEMENTFLAG_JUMPING))
-    {
-        data >> mi->j_zspeed;
-        data >> mi->j_sinAngle;
-        data >> mi->j_cosAngle;
-        data >> mi->j_xyspeed;
-    }
-
-    if (mi->HasMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION))
-        data >> mi->splineElevation;
-}
-
-void WorldSession::WriteMovementInfo(WorldPacket *data, MovementInfo *mi)
-{
-    data->appendPackGUID(mi->guid);
-
-    *data << mi->flags;
-    *data << mi->flags2;
-    *data << mi->time;
-    *data << mi->pos.PositionXYZOStream();
-
-    if (mi->HasMovementFlag(MOVEMENTFLAG_ONTRANSPORT))
-    {
-       data->appendPackGUID(mi->t_guid);
-
-       *data << mi->t_pos.PositionXYZOStream();
-       *data << mi->t_time;
-       *data << mi->t_seat;
-    }
-
-    if (mi->HasMovementFlag(MovementFlags(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || mi->HasExtraMovementFlag(MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING))
-        *data << mi->pitch;
-
-    *data << mi->fallTime;
-
-    if (mi->HasMovementFlag(MOVEMENTFLAG_JUMPING))
-    {
-        *data << mi->j_zspeed;
-        *data << mi->j_sinAngle;
-        *data << mi->j_cosAngle;
-        *data << mi->j_xyspeed;
-    }
-
-    if (mi->HasMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION))
-        *data << mi->splineElevation;
 }
 
 void WorldSession::ReadAddonsInfo(WorldPacket &data)

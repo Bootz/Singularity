@@ -91,7 +91,7 @@ void WorldSession::SendNameQueryOpcodeFromDBCallBack(QueryResult result)
     std::string name = fields[1].GetString();
     uint8 pRace = 0, pGender = 0, pClass = 0;
     if (name == "")
-        name         = GetTrinityString(LANG_NON_EXIST_CHARACTER);
+        name         = GetSingularityString(LANG_NON_EXIST_CHARACTER);
     else
     {
         pRace        = fields[2].GetUInt8();
@@ -179,14 +179,17 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket & recv_data)
         data << uint32(entry);                              // creature entry
         data << Name;
         data << uint8(0) << uint8(0) << uint8(0);           // name2, name3, name4, always empty
+        data << uint8(0) << uint8(0) << uint8(0);           // name5, name6, name7
+        data << uint8(0);                                   // name8
         data << SubName;
         data << ci->IconName;                               // "Directions" for guard, string for Icons 2.3.0
         data << uint32(ci->type_flags);                     // flags
+        data << uint32(0);                                  // flags2
         data << uint32(ci->type);                           // CreatureType.dbc
         data << uint32(ci->family);                         // CreatureFamily.dbc
         data << uint32(ci->rank);                           // Creature Rank (elite, boss, etc)
-        data << uint32(ci->KillCredit[0]);                  // new in 3.1, kill credit
-        data << uint32(ci->KillCredit[1]);                  // new in 3.1, kill credit
+        data << uint32(ci->KillCredit[0]);                  // kill credit 1
+        data << uint32(ci->KillCredit[1]);                  // kill credit 2
         data << uint32(ci->Modelid1);                       // Modelid1
         data << uint32(ci->Modelid2);                       // Modelid2
         data << uint32(ci->Modelid3);                       // Modelid3
@@ -197,6 +200,7 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket & recv_data)
         for (uint32 i = 0; i < MAX_CREATURE_QUEST_ITEMS; ++i)
             data << uint32(ci->questItems[i]);              // itemId[6], quest drop
         data << uint32(ci->movementId);                     // CreatureMovementInfo.dbc
+        data << uint32(ci->expansion);
         SendPacket(&data);
         sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_CREATURE_QUERY_RESPONSE");
     }
@@ -253,6 +257,8 @@ void WorldSession::HandleGameObjectQueryOpcode(WorldPacket & recv_data)
         data << float(info->size);                          // go size
         for (uint32 i = 0; i < MAX_GAMEOBJECT_QUEST_ITEMS; ++i)
             data << uint32(info->questItems[i]);              // itemId[6], quest drop
+
+        data << uint32(0);                                  // TODO: new field in template, has to be implemented
         SendPacket(&data);
         sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_GAMEOBJECT_QUERY_RESPONSE");
     }
