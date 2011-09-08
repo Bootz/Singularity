@@ -129,6 +129,12 @@ void Object::_InitValues()
 
 void Object::_Create(uint32 guidlow, uint32 entry, HighGuid guidhigh)
 {
+    if (guidlow == 0)
+    {
+        sLog->outError("Object::_Create Has been triggered with guidlow 0 for entry %u", entry);
+        return;
+    }
+
     if (!m_uint32Values)
         _InitValues();
 

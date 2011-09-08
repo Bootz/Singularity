@@ -69,7 +69,7 @@ enum Opcodes
     CMSG_BANKER_ACTIVATE                             = 0x03627, // 14480
     CMSG_BATTLEFIELD_JOIN                            = 0x0A860, // 14333
     CMSG_BATTLEFIELD_REQUEST_SCORE_DATA              = 0x0886B, // 14333
-    CMSG_BATTLEFIELD_STATUS                          = 0x03620, // 14333
+    CMSG_BATTLEFIELD_STATUS                          = 0x050D0, // 14333
     CMSG_BATTLEGROUND_PLAYER_POSITIONS               = 0x098EB, // 14333
     CMSG_BATTLEMASTER_JOIN_ARENA                     = 0x0086A, // 14333
     CMSG_BEGIN_TRADE                                 = 0x10093, //
